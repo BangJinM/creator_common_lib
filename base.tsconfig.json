@@ -8,7 +8,7 @@
         "inlineSources": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "strict": true,
+        "strict": false,
         "experimentalDecorators": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
@@ -17,6 +17,7 @@
         "types": [
             "node",
             "@cocos/creator-types/editor",
+            "@cocos/creator-types/engine/cc",
         ]
     }
 }

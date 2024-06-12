@@ -18,8 +18,8 @@ export class HeapSortArray {
     /** 
      * 删除堆顶元素，并重新调整堆
      */
-    deleteMin(): HeapSortNode | undefined {
-        if (this.heap.length === 0) return undefined;
+    deleteMin(): HeapSortNode {
+        if (this.heap.length === 0) return null;
 
         if (this.heap.length === 1) {
             return this.heap.pop();
@@ -27,7 +27,6 @@ export class HeapSortArray {
 
         // 将最后一个元素移动到堆顶
         const lastElement = this.heap.pop();
-        if (!lastElement) return undefined
         const root = this.heap[0];
         lastElement.nodeIndex = 0;
 
@@ -47,7 +46,7 @@ export class HeapSortArray {
     /**
      * 获取堆顶元素
      */
-    getMinGrid(): HeapSortNode | undefined {
+    getMinGrid(): HeapSortNode | null {
         return this.deleteMin();
     }
 

@@ -1,14 +1,5 @@
 {
     "extends": "./base.tsconfig.json",
-    "compilerOptions": {
-        "strict": true,
-        "outDir": "./dist",
-        "rootDir": "./source",
-        "types": [
-            "node",
-            "@cocos/creator-types/editor",
-        ]
-    },
     "exclude": [
         "./assets"
     ]
