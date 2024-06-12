@@ -1,5 +1,5 @@
 import { ISingleton } from "./ISingleton";
-import { GetManagerPersistNode } from "./utils/CocosUtils";
+import { GetManagerPersistNode } from "./Utils/CocosUtils";
 
 /** 持久化存储 */
 export class LocalStorageManager extends ISingleton {

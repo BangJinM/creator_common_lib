@@ -17,7 +17,7 @@
         "types": [
             "node",
             "@cocos/creator-types/editor",
-            "@cocos/creator-types/engine/cc",
+            "@cocos/creator-types/engine",
         ]
     }
 }
