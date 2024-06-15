@@ -7,7 +7,6 @@
     "author": "J",
     "editor": ">=3.8.3",
     "scripts": {
-        "preinstall": "node ./scripts/preinstall.js",
         "build": "rollup --config"
     },
     "description": "描述",
