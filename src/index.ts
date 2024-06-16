@@ -1,3 +1,7 @@
+export * from "./Runtime/AStar/AStarNode"
+export * from "./Runtime/AStar/FindAStar"
+export * from "./Runtime/AStar/ISceneGridManager"
+
 export * from "./Runtime/GameStatus/GameStatus"
 export * from "./Runtime/GameStatus/GameStatusManager"
 
@@ -5,6 +9,7 @@ export * from "./Runtime/ResourceManager/AssetRefComponent"
 export * from "./Runtime/ResourceManager/CacheManager"
 export * from "./Runtime/ResourceManager/ResourcesDefines"
 export * from "./Runtime/ResourceManager/BundleManager"
+export * from "./Runtime/ResourceManager/ResourceUtils"
 
 export * from "./Runtime/Utils/CocosUtils"
 export * from "./Runtime/Utils/MathUtils"

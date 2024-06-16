@@ -11,13 +11,13 @@ export interface IECSWorld {
      * 向世界中添加一个系统。
      * @param system 要添加的系统，实现IECSSystem接口。
      */
-    AddSystem(system: IECSSystem): void
+    AddSystem<T extends IECSSystem>(systemType: new () => T, args: any[]): T
 
     /**
      * 从世界中删除一个系统。
      * @param system 要删除的系统，实现IECSSystem接口。
      */
-    RmvSystem(system: IECSSystem): void
+    RemoveSystem<T extends IECSSystem>(systemType: new () => T): void
 
     /**
      * 根据类型获取系统实例。
@@ -25,6 +25,13 @@ export interface IECSWorld {
      * @returns 返回指定类型的系统实例。
      */
     GetSystem<T extends IECSSystem>(systemType: new () => T): T
+
+    /**
+     * 根据类型获取系统实例。
+     * @param systemType 要获取的系统类型，需要继承自IECSSystem。
+     * @returns 返回指定类型的系统实例。
+     */
+    GetSystemIndex<T extends IECSSystem>(systemType: new () => T): number
 
     /**
      * 在世界中创建一个新的实体。
