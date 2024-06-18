@@ -7,12 +7,6 @@ import { IComponent } from "./IComponent";
 
 export interface IECSSystem {
     /**
-     * 系统所包含组件类型集合。
-     * @key Entity
-     * @value 组件
-     */
-    components: Map<number, IComponent>;
-    /**
      * 当实体被添加至系统时调用。
      * @param entity 被添加的实体的唯一标识符。
      */

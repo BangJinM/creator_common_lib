@@ -50,14 +50,14 @@ export interface IECSWorld {
      * @param entity 要添加组件的实体的唯一标识符。
      * @param component 要添加的组件实例，实现IComponent接口。
      */
-    AddComponent<T extends IComponent>(entity: number, component: T): void
+    AddComponent<T extends IComponent>(entity: number, systemType: new () => T): T
 
     /**
      * 从指定实体上移除一个组件。
      * @param entity 要移除组件的实体的唯一标识符。
      * @param componentType 要移除的组件类型。
      */
-    RemoveComponent(entity: number, componentType: any): void
+    RemoveComponent<T extends IComponent>(entity: number, systemType: new () => T): void
 
     /**
      * 获取指定实体上的组件。
@@ -65,5 +65,6 @@ export interface IECSWorld {
      * @param componentType 要获取的组件类型。
      * @returns 返回对应类型的组件实例，如果没有找到则返回undefined。
      */
-    GetComponent(entity: number, componentType: any): any
+    GetComponent<T extends IComponent>(entity: number, systemType: new () => T): T
+    GetComponentIndex<T extends IComponent>(entity: number, systemType: new () => T): number
 }
