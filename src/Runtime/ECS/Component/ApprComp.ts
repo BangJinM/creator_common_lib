@@ -1,14 +1,9 @@
-import * as cc from "cc";
 import { IComponent } from "../Base/IComponent";
+import { ecs_component } from "../Base/ECSDefines";
+import { AppearanceSystem } from "../System/AppearanceSystem";
 
+@ecs_component(AppearanceSystem)
 /** 外观 */
-export class IApprComp extends IComponent {
-    /** 外观的根节点 */
-    node: cc.Node | undefined = undefined
-}
-
-/** 精灵外观 */
-export class SpriteApprComp extends IApprComp {
-    /** 图片名字 */
-    spriteName: string = "ddd"
+export class ApprComp extends IComponent {
+    icon: string = ""
 }

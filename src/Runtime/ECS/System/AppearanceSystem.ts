@@ -5,9 +5,6 @@ export class AppearanceSystem implements IECSSystem {
     /** 根节点 */
     rootNode: cc.Node | undefined = undefined
 
-    constructor(rootNode: cc.Node) {
-        this.rootNode = rootNode
-    }
 
     OnEntityAdd(entity: number): void {
         throw new Error("Method not implemented.");
