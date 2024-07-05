@@ -1,6 +1,6 @@
 {
     "package_version": 2,
-    "name": "creator_common_lib",
+    "name": "ccl",
     "version": "1.0.0",
     "type": "module",
     "module": "ES6",
