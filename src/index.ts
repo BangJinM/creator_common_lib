@@ -23,6 +23,6 @@ export * from "./Runtime/Logger"
 export * from "./Runtime/ISingleton"
 
 export * from "./Runtime/ECS/System/AppearanceSystem"
-export * from "./Runtime/ECS/World/ECSWorld"
+export * from "./Runtime/ECS/Object/ECSWorld"
 export * from "./Runtime/ECS/Component/ApprComp"
 export * from "./Runtime/ECS/Base/IComponent"

@@ -4,6 +4,7 @@
  */
 
 export interface IECSSystem {
+    GetEntities();
     /**
      * 当实体进入时触发。
      * @param entity 进入的实体的唯一标识符。

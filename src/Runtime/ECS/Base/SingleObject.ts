@@ -1,6 +1,9 @@
-export class ObjectKey {
+/**
+ * 每个对象赋予一个唯一的key
+ */
+export class SingleObject<T> {
     /** 有效的ID */
-    private objects: Set<number> = new Set();
+    private objects: Map<number, T> = new Map();
     /** 失效的ID列表 */
     private deleteObjects: number[] = [];
 
@@ -12,7 +15,7 @@ export class ObjectKey {
         this.deleteObjects.push(key);
     }
 
-    CreateObject() {
+    CreateObject(object: T) {
         let index = -1;
         if (this.deleteObjects.length > 0) {
             index = this.deleteObjects.pop();
@@ -20,7 +23,19 @@ export class ObjectKey {
             index = this.objects.size;
         }
 
-        this.objects.add(index);
+        this.objects.set(index, object);
         return index;
+    }
+
+    GetObjects(): Map<number, T> {
+        return this.objects
+    }
+
+    GetObject(key: number): T {
+        return this.objects.get(key);
+    }
+
+    HasObject(key: number): boolean {
+        return this.objects.has(key);
     }
 }

@@ -1,17 +1,13 @@
 /**
- * ECS世界中的组件
+ * 组件接口
  */
-export class IComponent {
-    /** 脏数据 */
-    dirty = false;
+export interface IComponent {
     /**
-     * 设置标记，表示对象需要更新。
+     * 置为脏方法
      */
-    Mark(): void { this.dirty = true }
+    Dirty(dirty: boolean): void;
     /**
-     * 检查对象是否已被标记为脏状态，即需要更新。
-     * 
-     * @returns {boolean} - 如果对象被标记为脏，则返回true，否则返回false。
+     * 是否为脏
      */
-    Dirty(): boolean { return this.dirty }
+    GetDirty(): boolean
 }

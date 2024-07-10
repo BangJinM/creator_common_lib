@@ -1,11 +1,11 @@
-import { IECSSystem } from "./IECSSystem";
+import { IECSSystem } from "./Base/IECSSystem";
 
 let compent_system_map: Map<string, new () => IECSSystem> = new Map();
 /**
  * 标记组件对应的系统
  */
 export function ecs_component(systemType: new () => IECSSystem) {
-    return function (target: Function) {
+    return function (target) {
         compent_system_map.set(target.name, systemType);
     }
 }

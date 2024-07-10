@@ -1,5 +1,5 @@
 import { IComponent } from "../Base/IComponent";
-import { ecs_component } from "../Base/ECSDefines";
+import { ecs_component } from "../ECSDefines";
 import { AppearanceSystem } from "../System/AppearanceSystem";
 
 @ecs_component(AppearanceSystem)
