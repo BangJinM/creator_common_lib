@@ -1,7 +1,6 @@
 import { IECSSystem } from "../Base/IECSSystem";
 
 export class ECSSystem implements IECSSystem {
-
     /** 本系统中的实体 */
     entities: Set<number> = new Set<number>()
 
@@ -17,5 +16,9 @@ export class ECSSystem implements IECSSystem {
     }
     OnUpdate(entity: number): void {
 
+    }
+    OnEnter(): void {
+    }
+    OnExit(): void {
     }
 }

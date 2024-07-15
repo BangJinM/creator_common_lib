@@ -5,7 +5,7 @@ export interface IComponent {
     /**
      * 置为脏方法
      */
-    Dirty(dirty: boolean): void;
+    SetDirty(dirty: boolean): void;
     /**
      * 是否为脏
      */

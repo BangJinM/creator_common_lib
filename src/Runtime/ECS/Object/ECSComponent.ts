@@ -4,7 +4,7 @@ export class ECSComponent implements IComponent {
 
     dirty: boolean = true
 
-    Dirty(dirty: boolean): void {
+    SetDirty(dirty: boolean): void {
         this.dirty = dirty
     }
 

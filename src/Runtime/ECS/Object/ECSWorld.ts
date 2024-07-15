@@ -63,6 +63,18 @@ export class ECSWorld implements IECSWorld {
     }
 
     RemoveEntity(entity: number): void {
+        let entityObject = this.entities.GetObject(entity) as ECSEntity
+        if (!entityObject) return
+        let comps = entityObject.GetComponents()
+        for (const compId of comps) {
+            let comp = this.components.GetObject(compId)
+
+            let systemC = GetComponentSystem(comp.constructor.name)
+            let system = this.GetSystem(systemC)
+            if (system)
+                system.OnEntityExit(entity)
+            this.components.RemoveObject(compId)
+        }
         return this.entities.RemoveObject(entity)
     }
 
@@ -81,6 +93,8 @@ export class ECSWorld implements IECSWorld {
 
         entityObject.AddComponent(compId)
         system.OnEntityEnter(entity)
+
+        return comp
     }
 
     RemoveComponent<T extends IComponent>(entity: number, compC: new () => T): void {
@@ -94,7 +108,7 @@ export class ECSWorld implements IECSWorld {
         let comp = this.components.GetObject(compId)
         if (!comp) return
 
-        let system = this.GetSystem(GetComponentSystem(typeof (comp)))
+        let system = this.GetSystem(GetComponentSystem(comp.constructor.name))
         if (!system) return
 
         entityObject.RemoveComponent(compId)
@@ -117,5 +131,12 @@ export class ECSWorld implements IECSWorld {
             }
         }
         return -1
+    }
+
+    Update(deltaTime: number): void {
+        for (const sysId of this.systems.GetObjects().keys()) {
+            let system = this.systems.GetObject(sysId)
+            system.OnUpdate(deltaTime)
+        }
     }
 }

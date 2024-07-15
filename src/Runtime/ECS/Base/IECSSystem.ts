@@ -22,4 +22,6 @@ export interface IECSSystem {
      * @param entity 需要更新的实体的唯一标识符。
      */
     OnUpdate(entity: number): void;
+    OnEnter(): void;
+    OnExit(): void;
 }

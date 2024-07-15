@@ -77,4 +77,6 @@ export interface IECSWorld {
      * @returns 返回对应类型的组件实例，如果没有找到则返回undefined。
      */
     GetComponentKey<T extends IComponent>(entity: number, compC: new () => T): number
+
+    Update(deltaTime: number): void
 }
