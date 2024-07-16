@@ -1,5 +1,6 @@
 import { IECSSystem } from "./IECSSystem";
 import { IComponent } from "./IComponent";
+import { IEntity } from "./IEntity";
 
 /**
  * 定义了ECSWorld接口，代表一个实体组件系统的世界，管理所有实体和系统。
@@ -36,7 +37,7 @@ export interface IECSWorld {
      * 在世界中创建一个新的实体。
      * @returns 新创建的实体的唯一标识符。
      */
-    CreateEntity(): number
+    CreateEntity<T extends IEntity>(entityC: new () => T): number
 
     /**
      * 从世界中删除一个实体。

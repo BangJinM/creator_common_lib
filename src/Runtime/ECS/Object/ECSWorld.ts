@@ -4,10 +4,11 @@ import { IComponent } from "../Base/IComponent";
 import { SingleObject } from "../Base/SingleObject";
 import { GetComponentSystem } from "../ECSDefines";
 import { ECSEntity } from "./ECSEntity";
+import { IEntity } from "../Base/IEntity";
 
 export class ECSWorld implements IECSWorld {
     /** 实体列表 */
-    entities: SingleObject<ECSEntity> = new SingleObject()
+    entities: SingleObject<IEntity> = new SingleObject()
     /** 系统ID */
     systems: SingleObject<IECSSystem> = new SingleObject()
     /** 组件列表 */
@@ -58,8 +59,11 @@ export class ECSWorld implements IECSWorld {
         return -1
     }
 
-    CreateEntity(): number {
-        return this.entities.CreateObject(new ECSEntity())
+    CreateEntity<T extends IEntity>(entityC: new () => T = null): number {
+        if (!entityC)
+            return this.entities.CreateObject(new ECSEntity())
+        else
+            return this.entities.CreateObject(Reflect.construct(entityC, []))
     }
 
     RemoveEntity(entity: number): void {
