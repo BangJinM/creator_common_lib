@@ -1,6 +1,6 @@
 import * as cc from "cc";
 import { ISingleton, set_manager_instance } from "../ISingleton";
-import { ASSET_CACHE_FLAG, AssetCache, AssetType, BundleCache, USE_SPRITE_BUNDLE_LOAD, spriteAtlasPipeLine } from "./ResourcesDefines";
+import { ASSET_CACHE_FLAG, AssetCache, AssetType, USE_SPRITE_BUNDLE_LOAD } from "./ResourcesDefines";
 
 
 export class AssetMap {
