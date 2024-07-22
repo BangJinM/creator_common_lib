@@ -1,53 +1,30 @@
 import * as cc from "cc";
 import { ISingleton, set_manager_instance } from "../ISingleton";
-import { ASSET_CACHE_FLAG, AssetCache, AssetType, USE_SPRITE_BUNDLE_LOAD } from "./ResourcesDefines";
+import { IResource } from "./IResource";
 
 
 export class AssetMap {
-    private assets: Map<string, Map<string, cc.Asset>> = new Map()
+    private assets: Map<string, IResource> = new Map()
 
-    HaveAsset(assetType: string, fName: string): boolean {
-        let asset = this.GetAsset(assetType, fName)
-        return asset ? true : false
+    HaveAsset(uName: string = ""): boolean {
+        if (uName.length <= 0) return false
+        return this.assets.has(uName)
     }
 
-    GetAsset(assetType: string, fName: string): cc.Asset {
-        let nameMap = this.assets.get(assetType)
-        if (!nameMap) return null
-
-        let asset = nameMap.get(fName)
-        if (!asset) return null
-
-        return asset
+    GetAsset(uName: string): IResource {
+        return this.assets.get(uName)
     }
 
-    DelAsset(assetType: string, fName: string) {
-        let nameMap = this.assets.get(assetType)
-        if (!nameMap) return
-
-        nameMap.delete(fName)
+    DelAsset(uName: string) {
+        this.assets.delete(uName)
     }
 
-    AddAsset(assetType: string, fName: string, asset: cc.Asset) {
-        let nameMap = this.assets.get(assetType)
-        if (!nameMap) {
-            nameMap = new Map()
-            this.assets.set(assetType, nameMap)
-        }
-
-        nameMap.set(fName, asset)
+    AddAsset(asset: IResource) {
+        this.assets.set(asset.GetUName(), asset)
     }
 
-    GetAssetNames(assetType: string) {
-        let nameMap = this.assets.get(assetType)
-        if (!nameMap) {
-            return []
-        }
-        return Array.from(nameMap.keys())
-    }
-
-    GetAssetTypes() {
-        return Array.from(this.assets.keys())
+    GetAssets() {
+        return this.assets.values()
     }
 
     Clear() {
@@ -58,115 +35,41 @@ export class AssetMap {
 /** 缓存管理类 */
 @set_manager_instance()
 export class CacheManager extends ISingleton {
-    private delayTime = 0
-    private observers = new Map()
-    private deleteAssets: AssetMap = new AssetMap()
     private usingAssets: AssetMap = new AssetMap()
 
-    Init() {
-    }
-
     Update(deltaTime: number) {
-        this.delayTime += deltaTime
-        if (this.delayTime < 1) {
-            return
-        }
-
-        this.updateAssets(this.delayTime)
-        this.DelAsset(this.deleteAssets)
-
-        this.delayTime = 0
+        this.updateAssets(deltaTime)
     }
     Clean() {
+        this.DelAsset(this.usingAssets)
     }
 
-    GetAssetData(assetType: AssetType, fName: string): cc.Asset {
-        let key = cc.js.getClassName(assetType)
-
-        if (this.usingAssets.HaveAsset(key, fName))
-            return this.usingAssets.GetAsset(key, fName)
-
-        if (this.deleteAssets.HaveAsset(key, fName)) {
-            let asset = this.deleteAssets.GetAsset(key, fName)
-            this.deleteAssets.DelAsset(key, fName)
-            this.usingAssets.AddAsset(key, fName, asset)
-            return asset
-        }
-
+    GetAssetData(uName: string): IResource {
+        if (this.usingAssets.HaveAsset(uName)) return this.usingAssets.GetAsset(uName)
         return null
     }
 
-    AddAsset(assetType: string, fName: string, asset: cc.Asset) {
-        this.usingAssets.AddAsset(assetType, fName, asset)
-    }
-
-    DelAssetAsset(asset: cc.Asset) {
-        if (!asset)
-            return
-
-        if (!asset[ASSET_CACHE_FLAG]) {
-            return
-        }
-
-        let assetCache: AssetCache = asset[ASSET_CACHE_FLAG]
-
-        for (const iterator of assetCache.depends) {
-            iterator.decRef()
-        }
-
-        asset.decRef()
-
-        // 如果是bundle资源, bundle中的资源 是直接加载,卸载交由assetManager处理
-        if (USE_SPRITE_BUNDLE_LOAD && assetCache.bundle) {
-            return
-        }
-
-        // AppLog.log("资源释放", assetCache.url)
-        cc.assetManager.releaseAsset(asset)
-    }
-
-    public DelAllAsset(asset: cc.Asset) {
-        this.DelAsset(this.usingAssets)
-        this.DelAsset(this.deleteAssets)
+    AddAsset(asset: IResource) {
+        this.usingAssets.AddAsset(asset)
     }
 
     /** 释放所有资源 */
     public DelAsset(tab: AssetMap) {
-        for (const typeName of tab.GetAssetTypes()) {
-            let assets = tab.GetAssetNames(typeName)
-            for (const assetName of assets) {
-                let asset = tab.GetAsset(typeName, assetName)
-                this.DelAssetAsset(asset)
-            }
+        for (const asset of tab.GetAssets()) {
+            asset.Release()
         }
         tab.Clear()
     }
-
 
     /**
      * 更新所有资源的状态， 将需要删除的资源放入deleteAssets
      */
     private updateAssets(deltaTime) {
-        let assetTypes = this.usingAssets.GetAssetTypes()
-
-        for (const typeName of assetTypes) {
-            let assets: string[] = this.usingAssets.GetAssetNames(typeName)
-            for (const assetName of assets) {
-                let asset = this.usingAssets.GetAsset(typeName, assetName)
-                if (asset.refCount <= 1) {
-                    let assetCache = asset[ASSET_CACHE_FLAG] as AssetCache
-                    if (!assetCache) {
-                        console.error("error!!!!!!!!! asset  release : url = " + assetName)
-                        this.usingAssets.DelAsset(typeName, assetName)
-                    } else {
-                        if (assetCache.releaseTime <= 0) {
-                            this.usingAssets.DelAsset(typeName, assetName)
-                            this.deleteAssets.AddAsset(typeName, assetName, asset)
-                        } else {
-                            assetCache.releaseTime -= deltaTime
-                        }
-                    }
-                }
+        let assets = this.usingAssets.GetAssets()
+        for (const asset of assets) {
+            if (asset.oriAsset.refCount <= 1) {
+                this.usingAssets.DelAsset(asset.GetUName())
+                asset.Release()
             }
         }
     }

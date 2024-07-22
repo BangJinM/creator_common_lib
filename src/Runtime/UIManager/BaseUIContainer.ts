@@ -1,10 +1,10 @@
 import * as cc from "cc";
 import { UIEnum } from "./UIEnum";
-import { LoadAssetByName } from "../ResourceManager/ResourceUtils";
+import { LoadPrefab } from "../ResourceManager/ResourceLoadUtils";
 import { BundleManager } from "../ResourceManager/BundleManager";
 import { Clone } from "../Utils/CocosUtils";
 import { UIStatus } from "./UIStatus";
-import { BundleCache } from "../ResourceManager/ResourcesDefines";
+import { BundleCache } from "../ResourceManager/BundleCache";
 
 @cc._decorator.ccclass()
 export class BaseUIContainer extends cc.Component {
@@ -26,7 +26,7 @@ export class BaseUIContainer extends cc.Component {
     protected onLoad(): void {
         let bundle: BundleCache = BundleManager.GetInstance().GetBundle(this.bundleName)
 
-        let promise = LoadAssetByName(this.layerName, cc.Prefab, bundle)
+        let promise = LoadPrefab(this.layerName, bundle)
         promise.then(function (asset: cc.Prefab) {
             if (!asset) return
             this.status = UIStatus.FINISH

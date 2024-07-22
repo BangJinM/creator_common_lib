@@ -1,9 +1,8 @@
 import * as cc from "cc";
-import { ResourceArgs } from "./ResourceArgs";
-import { IResource } from "./IResource";
+import { ResourceArgs } from "../ResourceArgs";
+import { IResourceLoader } from "./IResourceLoader";
 
-
-export class SpriteFrameResource extends IResource {
+export class SpriteFrameLoader extends IResourceLoader {
     Load(): Promise<cc.SpriteFrame> {
         return new Promise((success) => {
             let newArgs = new ResourceArgs();

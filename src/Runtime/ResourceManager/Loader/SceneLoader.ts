@@ -1,11 +1,11 @@
 import * as cc from "cc";
-import { IResource } from "./IResource";
+import { IResourceLoader } from "./IResourceLoader";
 
-/** bundle 资源加载 */
-export class BundleResource extends IResource {
+/** Scene 加载 */
+export class SceneLoader extends IResourceLoader {
     Load(): Promise<cc.Asset> {
         return new Promise((success) => {
-            this.bundleCache.bundle.load(this.url, this.type, (error, asset) => {
+            this.bundleCache.bundle.loadScene(this.url, null, (error, asset) => {
                 this.SetAsset(asset);
                 success(asset);
             });

@@ -1,12 +1,12 @@
 import * as cc from "cc";
-import { IResource } from "./IResource";
+import { IResourceLoader } from "./IResourceLoader";
 
 
-export class RemoteResource extends IResource {
+export class RemoteLoader extends IResourceLoader {
     Load(): Promise<cc.Asset> {
         let extraData = this.options.version;
         return new Promise((success) => {
-            cc.assetManager.loadRemote((this.options.baseUrl || "") + this.url + extraData, null, (error, asset) => {
+            cc.assetManager.loadRemote(this.url + extraData, null, (error, asset) => {
                 this.SetAsset(asset);
                 success(asset);
             });

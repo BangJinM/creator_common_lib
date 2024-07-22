@@ -1,9 +1,8 @@
 import * as cc from "cc";
-import { ResourceArgs } from "./ResourceArgs";
-import { IResource } from "./IResource";
+import { ResourceArgs } from "../ResourceArgs";
+import { IResourceLoader } from "./IResourceLoader";
 
-
-export class SpriteAtlasResource extends IResource {
+export class SpriteAtlasLoader extends IResourceLoader {
     Load(): Promise<cc.SpriteAtlas> {
         return new Promise(function (success) {
             let promise = Promise.all<cc.Asset>([new Promise((subSuccess) => {
@@ -100,8 +99,6 @@ export class SpriteAtlasResource extends IResource {
                             offset: GetOffsetData(spriteFrameInfo.offset),
                             originalSize: GetSizeData(spriteFrameInfo.sourceSize)
                         })
-
-
                         // 跟SpriteAtlas保持一致
                         customAtlas.spriteFrames[key.replace(/.jpg|.png/, "")] = childSpriteFrame
                     }

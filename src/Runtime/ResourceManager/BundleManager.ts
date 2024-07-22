@@ -1,8 +1,7 @@
 import * as cc from "cc";
-import { ISingleton, set_manager_instance } from "../ISingleton";
-import { ASSET_CACHE_FLAG, AssetCache, AssetType, BundleCache, USE_SPRITE_BUNDLE_LOAD, spriteAtlasPipeLine } from "./ResourcesDefines";
-import { Logger } from "../Logger";
 import { DEBUG } from "cc/env";
+import { ISingleton, set_manager_instance } from "../ISingleton";
+import { BundleCache } from "./BundleCache";
 
 
 /** 缓存管理类 */
@@ -15,6 +14,13 @@ export class BundleManager extends ISingleton {
     bundlsShowInDebug = []
 
     Init() {
+        let loadBase = function (name) {
+            let bundle = cc.assetManager.getBundle(name)
+            this.AddBundle(name, bundle)
+        }.bind(this)
+
+        loadBase("resources")
+        // loadBase("main")
     }
 
     GetBundle(fName: string): BundleCache {
@@ -23,7 +29,6 @@ export class BundleManager extends ISingleton {
 
     AddBundleCache(fName: string, bundleCache: BundleCache) {
         if (this.bundleMap.has(fName)) {
-            Logger.error("重复设置Bundle！！！！")
             return
         }
 
@@ -50,6 +55,10 @@ export class BundleManager extends ISingleton {
         cc.assetManager.removeBundle(bundleCache.bundle)
 
         this.UpdateBundleStatus()
+    }
+
+    GetBundles() {
+        return this.bundleMap.values()
     }
 
     UpdateBundleStatus() {

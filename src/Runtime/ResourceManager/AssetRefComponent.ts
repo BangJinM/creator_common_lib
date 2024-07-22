@@ -2,31 +2,13 @@ import * as cc from "cc";
 import { ASSET_CACHE_FLAG } from "./ResourcesDefines";
 const { ccclass, property } = cc._decorator;
 
+/**
+ * 管理资源引用
+ */
 @ccclass('AssetRefComponent')
 export class AssetRefComponent extends cc.Component {
     @property({ type: [cc.Asset] })
-    private assets: cc.Asset[] = []
-
-    /**
-     * 克隆时，需要增加引用
-     * 原因：instantiate 后需要重新增加引用，引擎没有提供相应的方法,只能业务层实现，
-     * 注意：_instantiate只会在instantiate(AssetRefComponent)的时候生效。instantiate(Node)，则不会调用到
-     */
-    static AfterClone(origin: cc.Prefab | cc.Node, clone: cc.Node) {
-        if (origin instanceof cc.Prefab) {
-            let prefabRef: AssetRefComponent = clone.addComponent(AssetRefComponent)
-            prefabRef.AddAsset(origin)
-        }
-        else if (origin instanceof cc.Node) {// clone node需要执行AfterClone
-            let assetRefs = clone.getComponentsInChildren(AssetRefComponent)
-            for (let i = 0; i < assetRefs.length; i++) {
-                assetRefs[i].assets.forEach(asset => {
-                    asset.addRef()
-                })
-            }
-        }
-    }
-
+    public assets: cc.Asset[] = []
     /**
      * 添加资源
      */
@@ -59,7 +41,6 @@ export class AssetRefComponent extends cc.Component {
             asset.decRef()
         }
     }
-
     onDestroy() {
         for (const asset of this.assets) {
             this.DelAsset(asset)
