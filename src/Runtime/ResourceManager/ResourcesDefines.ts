@@ -7,3 +7,5 @@ export let USE_SPRITE_BUNDLE_LOAD = true
 export let DELAY_RELEASE_ASSET = true
 export let ASSET_CACHE_FLAG = "user_data_asset_cache_flag__"
 export let OBSERVER_XX_PROPERTY_FLAG = "user_data_observer_xx_property_flag__"
+
+export let REMOTE_RESOURCE_URL = "http://localhost:8080/"

@@ -3,7 +3,6 @@ import { DEBUG } from "cc/env";
 import { ISingleton, set_manager_instance } from "../ISingleton";
 import { BundleCache } from "./BundleCache";
 
-
 /** 缓存管理类 */
 @set_manager_instance()
 @cc._decorator.ccclass()
@@ -20,7 +19,6 @@ export class BundleManager extends ISingleton {
         }.bind(this)
 
         loadBase("resources")
-        // loadBase("main")
     }
 
     GetBundle(fName: string): BundleCache {

@@ -1,7 +1,9 @@
 import * as cc from "cc";
 import { BundleCache } from "./BundleCache";
-import { LoadSpriteFrame } from "./ResourceLoadUtils";
+import { LoadAsset, LoadPrefab, LoadSpriteFrame } from "./ResourceLoadUtils";
 import { AfterInstantiateNode, AfterInstantiatePrefab, ObserverButtonProperty, ObserverSpriteProperty } from "./AssetRefDefines";
+import { BundleManager } from "./BundleManager";
+import { ResourceArgs } from "./ResourceArgs";
 
 /** 克隆一个节点或者Prefab */
 export function Clone(origin: cc.Node | cc.Prefab) {
@@ -12,7 +14,7 @@ export function Clone(origin: cc.Node | cc.Prefab) {
 /**
  * 设置图片
  */
-export function SetSpriteFrame(sprite: cc.Sprite, url: string, bundleCache: BundleCache) {
+export function SetSpriteFrame(sprite: cc.Sprite, url: string, bundleCache?: BundleCache) {
     ObserverSpriteProperty(sprite)
     LoadSpriteFrame(url, bundleCache).then(spriteFrame => {
         if (!cc.isValid(sprite)) return
@@ -23,7 +25,7 @@ export function SetSpriteFrame(sprite: cc.Sprite, url: string, bundleCache: Bund
 /**
  * 设置按钮
  */
-export function SetButton(button: cc.Button, normalSprite: string, pressedSprite: string, hoverSprite: string, disabledSprite: string, bundleCache: BundleCache) {
+export function SetButton(button: cc.Button, normalSprite: string, pressedSprite: string, hoverSprite: string, disabledSprite: string, bundleCache?: BundleCache) {
     ObserverButtonProperty(button)
 
     if (normalSprite) {
@@ -47,3 +49,11 @@ export function SetButton(button: cc.Button, normalSprite: string, pressedSprite
         })
     }
 }
+
+LoadPrefab("prefabs/test", BundleManager.GetInstance().GetBundle("resources")).then(function (asset) {
+    let newNode = Clone(asset)
+})
+
+SetSpriteFrame(new cc.Sprite(), "images/test", BundleManager.GetInstance().GetBundle("resources"))
+
+LoadAsset(new ResourceArgs("images/test", cc.SpriteFrame, BundleManager.GetInstance().GetBundle("resources")))
