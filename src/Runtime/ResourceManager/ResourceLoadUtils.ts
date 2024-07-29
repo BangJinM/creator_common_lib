@@ -35,7 +35,6 @@ function LoadBundleAsset(args: ResourceArgs): [boolean, Promise<any>] {
         return [true, new Promise((success) => {
             let resourceManager = ResourceManager.GetInstance() as ResourceManager
             resourceManager.LoadAsset(args).then((asset) => {
-                CacheManager.GetInstance().AddAsset(asset)
                 success(asset)
             })
         })]
@@ -48,7 +47,6 @@ function LoadRemoteAsset(args: ResourceArgs): [boolean, Promise<any>] {
     return [true, new Promise((success) => {
         let resourceManager = ResourceManager.GetInstance() as ResourceManager
         resourceManager.LoadAsset(args).then((asset) => {
-            CacheManager.GetInstance().AddAsset(asset)
             success(asset)
         })
     })]
