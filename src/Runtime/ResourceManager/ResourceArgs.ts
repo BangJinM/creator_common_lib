@@ -26,6 +26,7 @@ export class ResourceArgs {
         this.bundleCache = resArgs.bundleCache;
         this.options = resArgs.options;
         this.url = resArgs.url;
+        this.uName = resArgs.GetUName();
     }
 
     GetUName() {

@@ -1,17 +1,30 @@
 import * as cc from "cc";
+import { AssetRefComponent } from "./AssetRefComponent";
 import { AfterInstantiateNode, AfterInstantiatePrefab, ObserverButtonProperty, ObserverSpriteProperty } from "./AssetRefDefines";
 import { BundleCache } from "./BundleCache";
-import { BundleManager } from "./BundleManager";
-import { ResourceArgs } from "./ResourceArgs";
-import { LoadAsset, LoadPrefab, LoadSpriteFrame } from "./ResourceLoadUtils";
+import { LoadSpriteFrame } from "./ResourceLoadUtils";
 
 /** 克隆一个节点或者Prefab */
 export function Clone(origin: cc.Node | cc.Prefab) {
     let node: cc.Node = cc.instantiate(origin) as cc.Node
     if (origin instanceof cc.Prefab) AfterInstantiatePrefab(origin, node)
     else AfterInstantiateNode(node)
+
+    let comp= node.getComponent(AssetRefComponent)
+    node.on(cc.NodeEventType.NODE_DESTROYED, () => {
+        let refComp = node.getComponent(AssetRefComponent)
+        if (refComp) {
+            refComp.DelAllAssets()
+        }
+    })
+    node.on(cc.NodeEventType.COMPONENT_REMOVED, (component) => {
+        if (component instanceof AssetRefComponent) {
+            console.error("AssetRefComponent被移除!!!!!!!!!!!!!!!!!!!!!!!!")
+        }
+    })
     return node
 }
+
 /**
  * 设置图片
  */
@@ -50,11 +63,3 @@ export function SetButton(button: cc.Button, normalSprite: string, pressedSprite
         })
     }
 }
-
-LoadPrefab("prefabs/test", BundleManager.GetInstance().GetBundle("resources")).then(function (asset) {
-    let newNode = Clone(asset)
-})
-
-SetSpriteFrame(new cc.Sprite(), "images/test", BundleManager.GetInstance().GetBundle("resources"))
-
-LoadAsset(new ResourceArgs("images/test", cc.SpriteFrame, BundleManager.GetInstance().GetBundle("resources")))

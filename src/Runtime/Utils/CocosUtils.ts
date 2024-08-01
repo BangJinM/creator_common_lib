@@ -1,5 +1,4 @@
 import * as cc from "cc";
-import { AssetRefComponent } from "../ResourceManager/AssetRefComponent";
 
 /** 获取组件，不存在时添加 */
 export function GetOrAddComponent<T extends cc.Component>(node: Node | any, componentName: new () => T): T {
@@ -46,11 +45,4 @@ export function GetManagerPersistNode(name: string, pName?: string) {
         pNode.addChild(managerNode)
     }
     return managerNode
-}
-
-/** 克隆节点/prefab */
-export function Clone(prefab: cc.Prefab | cc.Node) {
-    let newP: cc.Node = cc.instantiate(prefab) as cc.Node
-    AssetRefComponent.AfterClone(prefab, newP)
-    return newP
 }

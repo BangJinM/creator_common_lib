@@ -1,10 +1,10 @@
 import * as cc from "cc";
-import { UIEnum } from "./UIEnum";
-import { LoadPrefab } from "../ResourceManager/ResourceLoadUtils";
-import { BundleManager } from "../ResourceManager/BundleManager";
-import { Clone } from "../Utils/CocosUtils";
-import { UIStatus } from "./UIStatus";
 import { BundleCache } from "../ResourceManager/BundleCache";
+import { BundleManager } from "../ResourceManager/BundleManager";
+import { LoadPrefab } from "../ResourceManager/ResourceLoadUtils";
+import { Clone } from "../ResourceManager/ResourceUtils";
+import { UIEnum } from "./UIEnum";
+import { UIStatus } from "./UIStatus";
 
 @cc._decorator.ccclass()
 export class BaseUIContainer extends cc.Component {
