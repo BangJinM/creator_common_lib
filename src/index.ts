@@ -10,6 +10,7 @@ export * from "./Runtime/ResourceManager/CacheManager"
 export * from "./Runtime/ResourceManager/ResourcesDefines"
 export * from "./Runtime/ResourceManager/BundleManager"
 export * from "./Runtime/ResourceManager/ResourceLoadUtils"
+export * from "./Runtime/ResourceManager/ResourceUtils"
 
 export * from "./Runtime/Utils/CocosUtils"
 export * from "./Runtime/Utils/MathUtils"

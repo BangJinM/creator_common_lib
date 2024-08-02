@@ -1,5 +1,4 @@
 import * as cc from "cc";
-import { AssetRefComponent } from "./AssetRefComponent";
 import { AfterInstantiateNode, AfterInstantiatePrefab, ObserverButtonProperty, ObserverSpriteProperty } from "./AssetRefDefines";
 import { BundleCache } from "./BundleCache";
 import { LoadSpriteFrame } from "./ResourceLoadUtils";
@@ -9,19 +8,6 @@ export function Clone(origin: cc.Node | cc.Prefab) {
     let node: cc.Node = cc.instantiate(origin) as cc.Node
     if (origin instanceof cc.Prefab) AfterInstantiatePrefab(origin, node)
     else AfterInstantiateNode(node)
-
-    let comp= node.getComponent(AssetRefComponent)
-    node.on(cc.NodeEventType.NODE_DESTROYED, () => {
-        let refComp = node.getComponent(AssetRefComponent)
-        if (refComp) {
-            refComp.DelAllAssets()
-        }
-    })
-    node.on(cc.NodeEventType.COMPONENT_REMOVED, (component) => {
-        if (component instanceof AssetRefComponent) {
-            console.error("AssetRefComponent被移除!!!!!!!!!!!!!!!!!!!!!!!!")
-        }
-    })
     return node
 }
 

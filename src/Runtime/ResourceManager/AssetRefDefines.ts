@@ -8,6 +8,7 @@ import { ASSET_CACHE_FLAG, OBSERVER_XX_PROPERTY_FLAG } from "./ResourcesDefines"
 export function AfterInstantiatePrefab(origin: cc.Prefab, clone: cc.Node) {
     let prefabRef: AssetRefComponent = clone.addComponent(AssetRefComponent)
     prefabRef.AddAsset(origin)
+    ObserverXX(clone)
 }
 /**
  * 克隆时，需要增加引用
@@ -19,8 +20,25 @@ export function AfterInstantiateNode(clone: cc.Node) {
             asset.addRef()
         })
     }
+    ObserverXX(clone)
 }
 
+export function ObserverXX(node: cc.Node) {
+    if (node["__observerXX__"]) return
+    node["__observerXX__"] = true
+
+    node.on(cc.NodeEventType.NODE_DESTROYED, () => {
+        let refComp = node.getComponent(AssetRefComponent)
+        if (refComp) {
+            refComp.DelAllAssets()
+        }
+    })
+    node.on(cc.NodeEventType.COMPONENT_REMOVED, (component) => {
+        if (component instanceof AssetRefComponent) {
+            console.error("AssetRefComponent被移除!!!!!!!!!!!!!!!!!!!!!!!!")
+        }
+    })
+}
 
 /**
  * 增加资源监听
@@ -35,6 +53,8 @@ export function ObserverPropertySetter<T extends cc.Component>(target: T, proper
 
     const oldSet = descriptor.set;
     const oldGet = descriptor.get;
+
+    ObserverXX(this.node)
 
     Object.defineProperty(target, propertyKey, {
         get: oldGet,
@@ -52,8 +72,9 @@ export function ObserverPropertySetter<T extends cc.Component>(target: T, proper
             oldSet?.call(this, value);
 
             if (value && value[ASSET_CACHE_FLAG]) {
-                if (!refComp)
+                if (!refComp) {
                     refComp = this.node.addComponent(AssetRefComponent);
+                }
                 refComp?.AddAsset(value);
             }
         },
