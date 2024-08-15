@@ -15,19 +15,15 @@ export class EventManager extends ISingleton {
         this.eventTarget.on(eventType, callback, target);
     }
 
-
-
     off(eventType: string, callback: EventCallback, target?: any) {
         this.eventTarget.off(eventType, callback, target);
     }
-
-
 
     emit(eventType: string, ...args: any[]) {
         this.eventTarget.emit(eventType, ...args);
     }
 
     public Clean(): void {
-
+        this.eventTarget.removeAll(null)
     }
 }

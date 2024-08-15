@@ -1,7 +1,7 @@
 import * as cc from 'cc'
+import { Heap } from '../DataStructure/Heap'
 import { AStarNode } from "./AStarNode"
 import { ISceneGridManager } from "./ISceneGridManager"
-import { HeapSortArray } from "../DataStructure/HeapSortArray"
 
 let BIAS_VALUE = 14
 let LINE_VALUE = 10
@@ -19,8 +19,10 @@ let around = [
 export class FindAStar {
     sceneGridManager: ISceneGridManager
     /** 排序 */
-    sortArray: HeapSortArray = new HeapSortArray()
-    gridNodes: Map<number, AStarNode> = new Map()
+    sortArray: Heap<AStarNode> = new Heap((a, b) => {
+        return a.f - b.f
+    })
+    gridNodes: {} = {}
 
     constructor(sceneGridManager: ISceneGridManager) {
         this.sceneGridManager = sceneGridManager
@@ -28,7 +30,7 @@ export class FindAStar {
 
     Clear() {
         this.sortArray.clear()
-        this.gridNodes.clear()
+        this.gridNodes = {}
     }
 
     FindPath(beginPoint: cc.Vec2, endPoint: cc.Vec2) {
@@ -49,8 +51,9 @@ export class FindAStar {
         let neighborNode: AStarNode
 
         let time = 0
+        let pT = 0
         while (this.sortArray.length() > 0) {
-            currentNode = this.sortArray.getMinGrid() as AStarNode
+            currentNode = this.sortArray.pop()
             if (!currentNode)
                 break
             currentNode.status = 2
@@ -64,17 +67,22 @@ export class FindAStar {
                     neighborNode = this.GetGrid(x, y)
                     if (neighborNode.status != 2) {
                         time++
+                        let beginT = new Date().getTime()
                         if (neighborNode.status == 1) {
                             this.Found(neighborNode, currentNode, tempPower)
                         }
                         else {
                             this.NoFound(neighborNode, x, y, endPoint.x, endPoint.y, tempPower, currentNode)
                         }
+                        let beginE = new Date().getTime()
+
+                        pT += (beginE - beginT)
                     }
                 }
             }
         }
-        console.log(`time = ${time}`)
+        console.log(` new a star find :${time}`)
+        console.log(`new a star find time :${pT} `)
         points.push({ x: currentNode.mapX, y: currentNode.mapY })
         while (currentNode.preGridNode) {
             points.push({ x: currentNode.mapX, y: currentNode.mapY })
@@ -89,15 +97,18 @@ export class FindAStar {
             gridNode.g = tempG
             gridNode.f = gridNode.g + gridNode.h
             gridNode.preGridNode = preNode
-            this.sortArray.updateNode(gridNode)
+            this.sortArray.update(gridNode)
         }
     }
 
     GetGrid(x: number, y: number): AStarNode {
-        let gridNode = this.gridNodes.get(((x << 16) + y))
+        if (!this.gridNodes[x])
+            this.gridNodes[x] = {}
+
+        let gridNode = this.gridNodes[x][y]
         if (!gridNode) {
             gridNode = new AStarNode(x, y)
-            this.gridNodes.set(gridNode.key, gridNode)
+            this.gridNodes[x][y] = gridNode
         }
         return gridNode
     }
@@ -108,7 +119,7 @@ export class FindAStar {
         gridNode.f = gridNode.g + gridNode.h
         gridNode.preGridNode = preNode
         gridNode.status = 1
-        this.sortArray.add(gridNode)
+        this.sortArray.insert(gridNode)
     }
 
     /** 从A到B的消耗 */
