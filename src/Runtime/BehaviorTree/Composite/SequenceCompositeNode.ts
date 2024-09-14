@@ -6,11 +6,11 @@ export class SequenceCompositeNode extends CompositeNode {
         super()
     }
 
-    public OnExcute(player, actCompleted): BTStatus {
+    public OnExcute(): BTStatus {
         if (this.GetChildrenCount() <= 0)
             return BTStatus.Success
         for (const child of this.mChildren) {
-            if (child.Tick(player, actCompleted) != BTStatus.Success)
+            if (child.Tick() != BTStatus.Success)
                 return BTStatus.Failure
         }
         return BTStatus.Success

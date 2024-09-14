@@ -42,18 +42,18 @@ export class WebSocketImpl implements ISocket {
         this.socket = new WebSocket(socketServerUrl);
         this.socket.binaryType = "arraybuffer";
 
-        this.socket.onclose = function (ev: CloseEvent | Event | MessageEvent) {
+        this.socket.onclose = (ev: CloseEvent | Event | MessageEvent) => {
             if (this.onClose) this.onClose(ev)
-        }.bind(this)
-        this.socket.onerror = function (ev: CloseEvent | Event | MessageEvent) {
+        }
+        this.socket.onerror = (ev: CloseEvent | Event | MessageEvent) => {
             if (this.onError) this.onError(ev)
-        }.bind(this)
-        this.socket.onmessage = function (ev: CloseEvent | Event | MessageEvent) {
+        }
+        this.socket.onmessage = (ev: CloseEvent | Event | MessageEvent) => {
             if (this.onMessage) this.onMessage(ev)
-        }.bind(this)
-        this.socket.onopen = function (ev: CloseEvent | Event | MessageEvent) {
+        }
+        this.socket.onopen = (ev: CloseEvent | Event | MessageEvent) => {
             if (this.onConnect) this.onConnect(ev)
-        }.bind(this)
+        }
     }
 
     public Send(message: any): void {
@@ -78,7 +78,7 @@ export class WebSocketImpl implements ISocket {
         return false;
     }
 
-    AddListener(onConnect?, onClose?, onMessage?, onError?) {
+    AddListener(onConnect?: SocketOptionsCallback, onClose?: SocketOptionsCallback, onMessage?: SocketOptionsCallback, onError?: SocketOptionsCallback) {
         this.onConnect = onConnect;
         this.onClose = onClose;
         this.onMessage = onMessage;

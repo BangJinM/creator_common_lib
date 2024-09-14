@@ -11,14 +11,14 @@ export class IfNotCompositeNode extends CompositeNode {
         this.conditionNode = condition
     }
 
-    public OnExcute(player, actCompleted): BTStatus {
+    public OnExcute(): BTStatus {
         if (!this.conditionNode)
             return BTStatus.Failure
         if (this.GetChildrenCount() <= 0)
             return BTStatus.Failure
 
-        if (!this.conditionNode.Tick(player, actCompleted))
-            return this.mChildren[0].Tick(player, actCompleted)
+        if (!this.conditionNode.Tick())
+            return this.mChildren[0].Tick()
         return BTStatus.Success
     }
 

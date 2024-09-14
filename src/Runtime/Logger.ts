@@ -40,7 +40,7 @@ export class Logger {
     /**
      * 用于输出错误信息
      */
-    static get err() {
+    static get error() {
         return window.console.log.bind(window.console, '%c【错误】', 'color: white; background-color: #DC3545; font-weight: bold; font-size: 14px;');
     }
 }

@@ -6,10 +6,10 @@ export class InverseDecoratorNode extends DecoratorNode {
         super()
     }
 
-    public OnExcute(player, actCompleted): BTStatus {
+    public OnExcute(): BTStatus {
         if (this.childNode == null)
             return BTStatus.Success;
-        let status = this.childNode.Tick(player, actCompleted);
+        let status = this.childNode.Tick();
         let result = BTStatus.Running;
         switch (status) {
             case BTStatus.Success:

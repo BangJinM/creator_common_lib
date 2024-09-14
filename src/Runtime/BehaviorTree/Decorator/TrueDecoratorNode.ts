@@ -6,8 +6,8 @@ export class TrueDecoratorNode extends DecoratorNode {
         super()
     }
 
-    public OnExcute(player, actCompleted): BTStatus {
-        this.childNode.Tick(player, actCompleted)
+    public OnExcute(): BTStatus {
+        this.childNode.Tick()
         return BTStatus.Success;
     }
 }

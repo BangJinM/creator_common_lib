@@ -6,11 +6,11 @@ export class WebSocketClient {
     private socket: ISocket = null
     private messageReceiver: IReceiver = null
 
-    constructor(messageReceiver) {
+    constructor(messageReceiver: IReceiver) {
         this.messageReceiver = messageReceiver
     }
 
-    public Connect(url) {
+    public Connect(url: string) {
         if (!this.socket) {
             this.socket = new WebSocketImpl()
         }

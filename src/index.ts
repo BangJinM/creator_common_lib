@@ -9,8 +9,6 @@ export * from "./Runtime/ResourceManager/AssetRefComponent"
 export * from "./Runtime/ResourceManager/BundleManager"
 export * from "./Runtime/ResourceManager/CacheManager"
 export * from "./Runtime/ResourceManager/ResourceDefines"
-export * from "./Runtime/ResourceManager/ResourcesDefines"
-export * from "./Runtime/ResourceManager/ResourceUtils"
 
 export * from "./Runtime/Utils/CocosUtils"
 export * from "./Runtime/Utils/MathUtils"
@@ -25,3 +23,4 @@ export * from "./Runtime/Logger"
 
 export * from "./Runtime/ECS/Base/IComponent"
 export * from "./Runtime/ECS/Object/ECSWorld"
+

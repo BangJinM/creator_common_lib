@@ -22,28 +22,28 @@ export class TreeNode {
     }
 
     /** 进入当前节点 */
-    public OnEnter(player, actCompleted) {
+    public OnEnter() {
         this.btStatus = BTStatus.Running;
     }
 
     /** 执行当前节点 */
-    public OnExcute(player, actCompleted): BTStatus {
+    public OnExcute(): BTStatus {
         return BTStatus.Success;
     }
 
     /** 推出当前节点 */
-    public OnLeave(player, actCompleted) {
+    public OnLeave() {
         this.btStatus = BTStatus.IDLE;
     }
 
     /** 更新 */
-    public Tick(player, actCompleted): BTStatus {
+    public Tick(): BTStatus {
         let status: BTStatus = BTStatus.IDLE;
         if (this.btStatus == BTStatus.IDLE)
-            this.OnEnter(player, actCompleted);
-        status = this.OnExcute(player, actCompleted);
+            this.OnEnter();
+        status = this.OnExcute();
         if (this.btStatus != BTStatus.Running)
-            this.OnLeave(player, actCompleted);
+            this.OnLeave();
         return status;
     }
 
