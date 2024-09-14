@@ -8,14 +8,14 @@ export interface IEntity {
      * @deprecated !!!! 不允许在ECSWorld之外调用AddComponent
      * @param key 组件的唯一标识符。使用数字键值来代表不同的组件类型。
      */
-    AddComponent(key: number);
+    AddComponent(key: number): void;
 
     /**
      * @description 从实体中移除一个组件。
      * @deprecated !!!! 不允许在ECSWorld之外调用RemoveComponent
      * @param key 组件的唯一标识符。通过此标识符来定位并移除特定的组件。
      */
-    RemoveComponent(key: number);
+    RemoveComponent(key: number): void;
 
     /**
      * @description 获取实体上所有组件的标识符集合。

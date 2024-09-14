@@ -3,13 +3,13 @@ import { IResourceLoader } from "./IResourceLoader";
 
 
 export class RemoteLoader extends IResourceLoader {
-    Load(): Promise<cc.Asset> {
-        let extraData = this.options.version;
-        return new Promise((success) => {
-            cc.assetManager.loadRemote(this.url + extraData, null, (error, asset) => {
-                this.SetAsset(asset);
-                success(asset);
-            });
+    Load(): void {
+        let url = this.iResource.url
+        let options = this.iResource.options
+        let extraData = options.version;
+        cc.assetManager.loadRemote(url + extraData, null, (error, asset) => {
+            this.iResource.SetAsset(asset);
+            this.iResource.LoadSuccess()
         });
     }
 }

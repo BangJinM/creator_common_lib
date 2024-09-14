@@ -1,15 +1,12 @@
-import * as cc from "cc";
-import { ResourceManager } from "../ResourceManager";
 import { IResource } from "../IResource";
 
 /**
  * 资源加载器
  */
-export class IResourceLoader extends IResource {
-    resourceFactory: ResourceManager = null;
-    constructor(resourceFactory: ResourceManager) {
-        super();
-        this.resourceFactory = resourceFactory;
+export class IResourceLoader {
+    iResource: IResource = null;
+    constructor(iResource: IResource) {
+        this.iResource = iResource;
     }
-    Load(): Promise<cc.Asset> { return null; }
+    Load(): void { }
 }

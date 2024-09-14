@@ -1,31 +1,39 @@
 import * as cc from "cc";
-import { ResourceArgs } from "../ResourceArgs";
+import { CacheManager } from "../CacheManager";
+import { IResource } from "../IResource";
+import { LoadAssetResultCallback } from "../ResourceDefines";
 import { IResourceLoader } from "./IResourceLoader";
 
 /**
  * 图片资源加载
  */
 export class TextureLoader extends IResourceLoader {
-    Load(): Promise<cc.Texture2D> {
-        return new Promise((success) => {
-            let newArgs = new ResourceArgs();
-            newArgs.Copy(this);
+    Load(): void {
+        let url = this.iResource.url
+        let options = this.iResource.options;
+        let bundleCache = this.iResource.bundleCache
 
-            let promise = this.resourceFactory.LoadAsset(newArgs);
-            promise.then(function (asset) {
-                if (!asset) {
-                    success(null);
-                    return;
+        let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager;
+        let imageResource: IResource = cacheManager.GetAssetData(IResource.GetUName(url, cc.ImageAsset))
+
+        if (!imageResource) imageResource = cacheManager.CreateAsset(url, cc.Texture2D, bundleCache, options)
+
+        let callback: LoadAssetResultCallback = (iResource: IResource) => {
+            if (imageResource.IsFinish()) {
+                if (!imageResource.oriAsset) {
+                    this.iResource.SetAsset(null)
+                    this.iResource.LoadSuccess()
+                    return
                 }
 
                 let texture = new cc.Texture2D();
-                texture.image = asset as cc.ImageAsset;
+                texture.image = imageResource.oriAsset as cc.ImageAsset
 
-                this.AddDepends([asset]);
-                this.SetAsset(texture);
-
-                success(texture);
-            }.bind(this));
-        });
+                this.iResource.SetAsset(texture)
+                this.iResource.AddDepends([imageResource])
+                this.iResource.LoadSuccess()
+            }
+        };
+        imageResource.Load(callback)
     }
 }

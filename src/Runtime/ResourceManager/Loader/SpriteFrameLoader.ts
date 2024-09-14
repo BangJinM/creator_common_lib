@@ -1,28 +1,37 @@
 import * as cc from "cc";
-import { ResourceArgs } from "../ResourceArgs";
+import { CacheManager } from "../CacheManager";
+import { IResource } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
+import { LoadAssetResultCallback } from "../ResourceDefines";
 
 export class SpriteFrameLoader extends IResourceLoader {
-    Load(): Promise<cc.SpriteFrame> {
-        return new Promise((success) => {
-            let newArgs = new ResourceArgs();
-            newArgs.Copy(this);
+    Load(): void {
+        let url = this.iResource.url
+        let options = this.iResource.options;
+        let bundleCache = this.iResource.bundleCache
 
-            let promise = this.resourceFactory.LoadAsset(newArgs);
-            promise.then(function (asset) {
-                if (!asset) {
-                    success(null);
-                    return;
+        let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager;
+        let textureResource: IResource = cacheManager.GetAssetData(IResource.GetUName(url, cc.Texture2D))
+
+        if (!textureResource) textureResource = cacheManager.CreateAsset(url, cc.Texture2D, bundleCache, options)
+
+        let callback: LoadAssetResultCallback = (iResource: IResource) => {
+            if (textureResource.IsFinish()) {
+                if (!textureResource.oriAsset) {
+                    this.iResource.SetAsset(null)
+                    this.iResource.LoadSuccess()
+                    return
                 }
 
                 let sp = new cc.SpriteFrame();
-                sp.texture = asset as cc.Texture2D;
+                sp.texture = textureResource.oriAsset as cc.Texture2D
 
-                this.AddDepends([asset]);
-                this.SetAsset(sp);
+                this.iResource.SetAsset(sp)
+                this.iResource.AddDepends([textureResource])
+                this.iResource.LoadSuccess()
+            }
+        };
 
-                success(sp);
-            }.bind(this));
-        });
+        textureResource.Load(callback)
     }
 }

@@ -77,7 +77,6 @@ export class UIGraphManager extends ISingleton {
                 return
         }
 
-
         properties.push(baseUIContainer)
         parent.addChild(baseUIContainer.node)
     }

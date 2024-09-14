@@ -1,6 +1,6 @@
 import * as cc from "cc";
-import { GetManagerPersistNode } from "./Utils/CocosUtils";
 import { IObject } from "./IObject";
+import { GetManagerPersistNode } from "./Utils/CocosUtils";
 
 /**
  * 单例类装饰

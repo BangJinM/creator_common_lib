@@ -3,12 +3,12 @@ import { IResourceLoader } from "./IResourceLoader";
 
 /** Scene 加载 */
 export class SceneLoader extends IResourceLoader {
-    Load(): Promise<cc.Asset> {
-        return new Promise((success) => {
-            this.bundleCache.bundle.loadScene(this.url, null, (error, asset) => {
-                this.SetAsset(asset);
-                success(asset);
-            });
+    Load(): void {
+        let bundleCache = this.iResource.bundleCache
+        let url = this.iResource.url
+        bundleCache.bundle.loadScene(url, null, (error, asset) => {
+            this.iResource.SetAsset(asset);
+            this.iResource.LoadSuccess()
         });
     }
 }

@@ -1,6 +1,8 @@
 import * as cc from "cc";
 import { BundleCache } from "./BundleCache";
-import { ResourceOptions } from "./ResourceOptions";
+import { AssetType, ResourceOptions } from "./ResourceDefines";
+
+
 
 export class ResourceArgs {
     /** 唯一名字 类型 + 路径 */
@@ -10,27 +12,31 @@ export class ResourceArgs {
     /** 资源所在的包 */
     bundleCache: BundleCache = null;
     /** 资源类型 */
-    type: new () => cc.Asset;
+    assetType: AssetType;
     /** 资源加载选项 */
     options: ResourceOptions = null;
 
-    constructor(url: string = "", type = cc.Asset, bundleCache: BundleCache = null, options: ResourceOptions = { needCache: true, version: `${new Date().getDate()}` }) {
-        this.url = url
-        this.type = type
-        this.bundleCache = bundleCache
-        this.options = options
+    static GetUName(fName: string, type: AssetType): string {
+        return `${cc.js.getClassName(type)}+${fName}`
     }
 
-    Copy(resArgs) {
-        this.type = resArgs.type;
+    constructor(url: string = "", type: AssetType = cc.Asset, bundleCache: BundleCache = null, options: ResourceOptions = { needCache: true, version: `${new Date().getDate()}` }) {
+        this.url = url
+        this.assetType = type
+        this.bundleCache = bundleCache
+        this.options = options
+        this.uName = ResourceArgs.GetUName(url, type)
+    }
+
+    Copy(resArgs: ResourceArgs) {
+        this.assetType = resArgs.assetType;
         this.bundleCache = resArgs.bundleCache;
         this.options = resArgs.options;
         this.url = resArgs.url;
-        this.uName = resArgs.GetUName();
+        this.uName = resArgs.uName;
     }
 
-    GetUName() {
-        if (this.uName.length <= 0) this.uName = `${cc.js.getClassName(this.type)}+${this.url}`;
-        return this.uName;
+    GetUName(): string {
+        return this.uName
     }
 }

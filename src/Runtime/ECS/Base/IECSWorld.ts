@@ -1,5 +1,5 @@
-import { IECSSystem } from "./IECSSystem";
 import { IComponent } from "./IComponent";
+import { IECSSystem } from "./IECSSystem";
 import { IEntity } from "./IEntity";
 
 /**
@@ -63,7 +63,7 @@ export interface IECSWorld {
      * @param entity 要移除组件的实体的唯一标识符。
      * @param componentType 要移除的组件类型。
      */
-    RemoveComponentKey(entity: number, key: number);
+    RemoveComponentKey(entity: number, key: number): void;
     /**
      * 获取指定实体上的组件。
      * @param entity 要获取组件的实体的唯一标识符。

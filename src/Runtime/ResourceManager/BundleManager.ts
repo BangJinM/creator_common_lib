@@ -8,17 +8,31 @@ import { BundleCache } from "./BundleCache";
 @cc._decorator.ccclass()
 export class BundleManager extends ISingleton {
     bundleMap: Map<string, BundleCache> = new Map()
+    bundleFunc: Map<string, Function[]> = new Map()
 
     @cc._decorator.property(BundleCache)
-    bundlsShowInDebug = []
+    bundlsShowInDebug: BundleCache[] = []
 
     Init() {
-        let loadBase = function (name) {
+        let loadBase = (name: string) => {
             let bundle = cc.assetManager.getBundle(name)
             this.AddBundle(name, bundle)
-        }.bind(this)
+        }
 
         loadBase("resources")
+    }
+    LoadBundle(fName: string, callback?: Function) {
+        let flag = this.bundleFunc.has(fName)
+        if (flag) {
+            this.bundleFunc.get(fName).push(callback)
+            return
+        }
+        else {
+            this.bundleFunc.set(fName, [callback])
+        }
+        cc.assetManager.loadBundle(fName, (err: Error, bundle: cc.AssetManager.Bundle) => {
+            this.bundleFunc.get(fName).forEach(callback => callback(bundle))
+        })
     }
 
     GetBundle(fName: string): BundleCache {

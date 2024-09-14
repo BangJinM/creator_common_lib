@@ -16,7 +16,7 @@ export class LocalStorageManager extends ISingleton {
     private KEY_CONFIG: string = 'local_data';
 
     /** 玩家数据 */
-    private userData = {}
+    private userData: { [key: string]: any } = {}
     /** 玩家唯一ID，为空则为全局数据 */
     private userKey = ""
     /** 时间 */
@@ -40,7 +40,7 @@ export class LocalStorageManager extends ISingleton {
         this.userData = JSON.parse(userData)
     }
 
-    SetUserData(key, value) {
+    SetUserData(key: string, value: any) {
         this.userData[key] = value
         // this.userMark = true
         this.SaveUserData()
@@ -56,11 +56,11 @@ export class LocalStorageManager extends ISingleton {
         return localStorage.getItem(this.KEY_CONFIG + this.userKey) || ""
     }
 
-    private save(key: string, value) {
+    private save(key: string, value: any) {
         localStorage.setItem(key, value)
     }
 
-    GetUserDataByKey(key) {
+    GetUserDataByKey(key: string) {
         return this.userData[key]
     }
 
@@ -68,7 +68,7 @@ export class LocalStorageManager extends ISingleton {
         return this.GetUserDataByKey(key) || defaultValue
     }
 
-    GetIntegerForKey(key, defaultValue = 0) {
+    GetIntegerForKey(key: string, defaultValue: number = 0) {
         let result = this.GetUserDataByKey(key)
         if (!result)
             return defaultValue
@@ -76,7 +76,7 @@ export class LocalStorageManager extends ISingleton {
         return Number(result)
     }
 
-    GetJsonForKey(key) {
+    GetJsonForKey(key: string) {
         let jsonStr = this.GetStringForKey(key, "{}")
         return JSON.parse(jsonStr)
     }

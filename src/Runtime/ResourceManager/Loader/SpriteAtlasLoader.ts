@@ -1,92 +1,82 @@
 import * as cc from "cc";
-import { ResourceArgs } from "../ResourceArgs";
+import { CacheManager } from "../CacheManager";
+import { IResource } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
+import { LoadAssetResultCallback } from "../ResourceDefines";
 
 export class SpriteAtlasLoader extends IResourceLoader {
-    Load(): Promise<cc.SpriteAtlas> {
-        return new Promise(function (success) {
-            let promise = Promise.all<cc.Asset>([new Promise((subSuccess) => {
-                let newArgs = new ResourceArgs();
-                newArgs.Copy(this);
+    GetFrameData(str: string) {
+        if (str.length < 13) {
+            return null;
+        }
+        let newStr: string = str;
+        newStr = newStr.slice(2);
+        newStr = newStr.slice(0, newStr.length - 2);
+        let newList_0: string[] = newStr.split('},{');
+        let newList_1: string[] = newList_0[0].split(",");
+        let newList_2: string[] = newList_0[1].split(",");
+        if (newList_1.length < 2 || newList_2.length < 2) {
+            return null;
+        }
+        return new cc.Rect(parseInt(newList_1[0]), parseInt(newList_1[1]), parseInt(newList_2[0]), parseInt(newList_2[1]));
+    }
 
-                newArgs.url = this.url + this.options.resSuffix;
-                newArgs.type = cc.SpriteFrame;
-
-                let promise = this.resourceFactory.LoadAsset(newArgs);
-                promise.then((asset) => {
-                    asset?.addRef();
-                    subSuccess(asset);
-                });
-            }), new Promise((subSuccess) => {
-                let newArgs = new ResourceArgs();
-                newArgs.Copy(this);
-
-                newArgs.url = this.url + ".plist";
-                newArgs.type = cc.JsonAsset;
-
-                let promise = this.resourceFactory.LoadAsset(newArgs);
-                promise.then((asset) => {
-                    asset?.addRef();
-                    subSuccess(asset);
-                });
-            })]);
-            promise.then(function (array) {
-                for (const asset of array) {
-                    asset?.decRef();
-                }
-                if (!array[0] || !array[1]) {
-                    success(null);
-                    return;
-                }
+    GetSizeData(str: string) {
+        if (str.length < 5) {
+            return null;
+        }
+        let newStr: string = str;
+        newStr = newStr.slice(1);
+        newStr = newStr.slice(0, newStr.length - 1);
+        let newList_0: string[] = newStr.split(',');
+        if (newList_0.length < 2) {
+            return null;
+        }
+        return new cc.Size(parseInt(newList_0[0]), parseInt(newList_0[1]));
+    }
+    GetOffsetData(str: string) {
+        if (str.length < 5) {
+            return null;
+        }
+        let newStr: string = str;
+        newStr = newStr.slice(1);
+        newStr = newStr.slice(0, newStr.length - 1);
+        let newList_0: string[] = newStr.split(',');
+        if (newList_0.length < 2) {
+            return null;
+        }
+        return new cc.Vec2(parseInt(newList_0[0]), parseInt(newList_0[1]));
+    }
 
 
-                function GetFrameData(str: string) {
-                    if (str.length < 13) {
-                        return null;
-                    }
-                    let newStr: string = str;
-                    newStr = newStr.slice(2);
-                    newStr = newStr.slice(0, newStr.length - 2);
-                    let newList_0: string[] = newStr.split('},{');
-                    let newList_1: string[] = newList_0[0].split(",");
-                    let newList_2: string[] = newList_0[1].split(",");
-                    if (newList_1.length < 2 || newList_2.length < 2) {
-                        return null;
-                    }
-                    return new cc.Rect(parseInt(newList_1[0]), parseInt(newList_1[1]), parseInt(newList_2[0]), parseInt(newList_2[1]));
-                }
+    Load(): void {
+        let url = this.iResource.url
+        let options = this.iResource.options;
+        let bundleCache = this.iResource.bundleCache
 
-                function GetSizeData(str: string) {
-                    if (str.length < 5) {
-                        return null;
-                    }
-                    let newStr: string = str;
-                    newStr = newStr.slice(1);
-                    newStr = newStr.slice(0, newStr.length - 1);
-                    let newList_0: string[] = newStr.split(',');
-                    if (newList_0.length < 2) {
-                        return null;
-                    }
-                    return new cc.Size(parseInt(newList_0[0]), parseInt(newList_0[1]));
-                }
-                function GetOffsetData(str: string) {
-                    if (str.length < 5) {
-                        return null;
-                    }
-                    let newStr: string = str;
-                    newStr = newStr.slice(1);
-                    newStr = newStr.slice(0, newStr.length - 1);
-                    let newList_0: string[] = newStr.split(',');
-                    if (newList_0.length < 2) {
-                        return null;
-                    }
-                    return new cc.Vec2(parseInt(newList_0[0]), parseInt(newList_0[1]));
+        let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager;
+        let spriteFrameResource: IResource = cacheManager.GetAssetData(IResource.GetUName(url, cc.SpriteFrame))
+        let plistResource: IResource = cacheManager.GetAssetData(IResource.GetUName(url, cc.JsonAsset))
+
+        if (!spriteFrameResource) spriteFrameResource = cacheManager.CreateAsset(url, cc.SpriteFrame, bundleCache, options)
+        if (!plistResource) plistResource = cacheManager.CreateAsset(url, cc.JsonAsset, bundleCache, options)
+
+        let callback: LoadAssetResultCallback = (iResource: IResource) => {
+            iResource.oriAsset?.addRef()
+            if (plistResource.IsFinish() && spriteFrameResource.IsFinish()) {
+                plistResource.oriAsset?.decRef()
+                spriteFrameResource.oriAsset?.decRef()
+
+                if (!plistResource.oriAsset || !spriteFrameResource.oriAsset) {
+                    this.iResource.SetAsset(null)
+                    this.iResource.LoadSuccess()
+                    return
                 }
 
-                let spriteFrame = array[0] as cc.SpriteFrame
-                let plistAsset = array[1] as cc.Asset
+                let spriteFrame = spriteFrameResource.oriAsset as cc.SpriteFrame
+                let plistAsset = plistResource.oriAsset as cc.Asset
 
-                let customAtlas = new cc.SpriteAtlas(this.url)
+                let customAtlas = new cc.SpriteAtlas(url)
                 let frames = plistAsset._nativeAsset?.frames
                 if (frames) {
                     for (const key of Object.keys(frames)) {
@@ -94,21 +84,23 @@ export class SpriteAtlasLoader extends IResourceLoader {
                         let spriteFrameInfo = frames[key]
                         childSpriteFrame.reset({
                             texture: spriteFrame.texture,
-                            rect: GetFrameData(spriteFrameInfo.frame),
+                            rect: this.GetFrameData(spriteFrameInfo.frame),
                             isRotate: spriteFrameInfo.rotated,
-                            offset: GetOffsetData(spriteFrameInfo.offset),
-                            originalSize: GetSizeData(spriteFrameInfo.sourceSize)
+                            offset: this.GetOffsetData(spriteFrameInfo.offset),
+                            originalSize: this.GetSizeData(spriteFrameInfo.sourceSize)
                         })
                         // 跟SpriteAtlas保持一致
                         customAtlas.spriteFrames[key.replace(/.jpg|.png/, "")] = childSpriteFrame
                     }
                 }
 
-                this.AddDepends(array);
-                this.SetAsset(customAtlas);
+                this.iResource.SetAsset(customAtlas)
+                this.iResource.AddDepends([spriteFrameResource, plistResource])
+                this.iResource.LoadSuccess()
+            }
+        };
 
-                success(customAtlas);
-            }.bind(this));
-        }.bind(this));
+        plistResource.Load(callback)
+        spriteFrameResource.Load(callback)
     }
 }

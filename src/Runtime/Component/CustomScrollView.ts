@@ -32,7 +32,7 @@ export class CustomScrollView extends cc.Component {
         scrollView.content.addChild(itemNode)
     }
 
-    UpdateRect(x, y) {
+    UpdateRect(x: number, y: number) {
         let uiT = this.getComponent(cc.UITransform)
         this.rect = uiT.getBoundingBox().clone()
         this.rect.xMax += x
@@ -85,7 +85,7 @@ export class CustomScrollView extends cc.Component {
         }
     }
 
-    UpdateItemNode(index, itemData: CustomItemData) {
+    UpdateItemNode(index: number, itemData: CustomItemData) {
         if (index < 0 || index > this.customItemData.length)
             return
 
