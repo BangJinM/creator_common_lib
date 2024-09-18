@@ -1,8 +1,8 @@
 import * as cc from "cc";
 import { BundleCache } from "./BundleCache";
-import { AssetType, ResourceOptions } from "./ResourceDefines";
+import { ResourceOptions } from "./ResourceDefines";
 
-
+export type AssetType = cc.Constructor<cc.Asset>
 
 export class ResourceArgs {
     /** 唯一名字 类型 + 路径 */
@@ -26,14 +26,6 @@ export class ResourceArgs {
         this.bundleCache = bundleCache
         this.options = options
         this.uName = ResourceArgs.GetUName(url, type)
-    }
-
-    Copy(resArgs: ResourceArgs) {
-        this.assetType = resArgs.assetType;
-        this.bundleCache = resArgs.bundleCache;
-        this.options = resArgs.options;
-        this.url = resArgs.url;
-        this.uName = resArgs.uName;
     }
 
     GetUName(): string {

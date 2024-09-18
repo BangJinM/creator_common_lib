@@ -1,7 +1,8 @@
 import { ISingleton, set_manager_instance } from "../ISingleton";
 import { BundleCache } from "./BundleCache";
 import { IResource } from "./IResource";
-import { AssetType, ResourceOptions } from "./ResourceDefines";
+import { AssetType } from "./ResourceArgs";
+import { ResourceOptions } from "./ResourceDefines";
 
 
 /** 缓存管理类 */

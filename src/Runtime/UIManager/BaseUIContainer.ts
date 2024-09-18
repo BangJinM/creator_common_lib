@@ -2,7 +2,8 @@ import * as cc from "cc";
 import { BundleCache } from "../ResourceManager/BundleCache";
 import { BundleManager } from "../ResourceManager/BundleManager";
 import { IResource } from "../ResourceManager/IResource";
-import { AssetLoadStatus, Resources } from "../ResourceManager/ResourceDefines";
+import { AssetLoadStatus } from "../ResourceManager/ResourceDefines";
+import { Resources } from "../ResourceManager/Resources";
 import { UIEnum } from "./UIEnum";
 import { UIStatus } from "./UIStatus";
 
@@ -43,7 +44,7 @@ export class BaseUIContainer extends cc.Component {
         let load = (property: UiRefPrefabProperty) => {
             count++
             let bundle: BundleCache = bundleManager.GetBundle(property.bundleName)
-            Resources.LoadPrefabAsset(property.prefabName, bundle, (iResource: IResource) => {
+            Resources.Loader.LoadPrefabAsset(property.prefabName, bundle, (iResource: IResource) => {
                 count--
                 iResource.oriAsset?.addRef()
                 this.loadedResourcs[property.prefabName] = iResource
@@ -68,7 +69,7 @@ export class BaseUIContainer extends cc.Component {
             }
         }
 
-        this.childNode = Resources.Clone(this.loadedResourcs[this.mainPrefabPropty.prefabName].oriAsset as cc.Prefab)
+        this.childNode = Resources.UIUtils.Clone(this.loadedResourcs[this.mainPrefabPropty.prefabName].oriAsset as cc.Prefab)
         this.node.addChild(this.childNode)
     }
 

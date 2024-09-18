@@ -2,8 +2,12 @@ import * as cc from "cc";
 import { BundleCache } from "./BundleCache";
 import { IResourceLoader } from "./Loader/IResourceLoader";
 import { LoaderFactory } from "./Loader/LoaderFactory";
-import { ResourceArgs } from "./ResourceArgs";
-import { AssetLoadStatus, AssetType, LoadAssetResultCallback, ResourceOptions } from "./ResourceDefines";
+import { AssetType, ResourceArgs } from "./ResourceArgs";
+import { AssetLoadStatus, ResourceOptions } from "./ResourceDefines";
+
+export type LoadAssetResultCallback = (iResource: IResource) => void;
+
+
 
 export class IResource extends ResourceArgs {
     /** 加载的资源 */

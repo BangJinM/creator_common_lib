@@ -9,6 +9,7 @@ export * from "./Runtime/ResourceManager/AssetRefComponent"
 export * from "./Runtime/ResourceManager/BundleManager"
 export * from "./Runtime/ResourceManager/CacheManager"
 export * from "./Runtime/ResourceManager/ResourceDefines"
+export * from "./Runtime/ResourceManager/Resources"
 
 export * from "./Runtime/Utils/CocosUtils"
 export * from "./Runtime/Utils/MathUtils"
