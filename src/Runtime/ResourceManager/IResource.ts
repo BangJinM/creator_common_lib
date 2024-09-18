@@ -3,7 +3,7 @@ import { BundleCache } from "./BundleCache";
 import { IResourceLoader } from "./Loader/IResourceLoader";
 import { LoaderFactory } from "./Loader/LoaderFactory";
 import { AssetType, ResourceArgs } from "./ResourceArgs";
-import { AssetLoadStatus, ResourceOptions } from "./ResourceDefines";
+import { ASSET_CACHE_FLAG, AssetLoadStatus, ResourceOptions } from "./ResourceDefines";
 
 export type LoadAssetResultCallback = (iResource: IResource) => void;
 
@@ -23,36 +23,45 @@ export class IResource extends ResourceArgs {
 
     constructor(url: string = "", type: AssetType = cc.Asset, bundleCache: BundleCache = null, options: ResourceOptions = { needCache: true, version: `${new Date().getDate()}` }) {
         super(url, type, bundleCache, options)
-        this.loader = LoaderFactory.GetResoureLoader(this.assetType, this)
+        this.loader = LoaderFactory.GetResoureLoader(this)
     }
 
+    /** 设置资源 */
     SetAsset(asset: cc.Asset) {
         this.oriAsset = asset;
         asset?.addRef();
         this.bundleCache?.AddRef()
+        if (this.oriAsset) Object.defineProperty(this.oriAsset, ASSET_CACHE_FLAG, { value: true, writable: false })
     }
+    /** 添加依赖 */
     AddDepends(depends: IResource[]) {
         for (const dependAsset of depends) {
             dependAsset.oriAsset?.addRef();
             this.dependAssets.push(dependAsset);
         }
     }
+    /** 释放资源 */
     Release() {
-        this.oriAsset.decRef();
+        this.oriAsset?.decRef();
         for (const dependAsset of this.dependAssets) {
             dependAsset.oriAsset?.decRef();
         }
-        this.bundleCache?.AddRef()
+        this.bundleCache?.DecRef()
+
         if (this.bundleCache) return;
-        cc.assetManager.releaseAsset(this.oriAsset);
+        if (this.oriAsset) cc.assetManager.releaseAsset(this.oriAsset);
     }
+    /** 检测是否还在使用 */
     UnuseAsset() {
+        if (!this.IsFinish()) return false
         if (!this.oriAsset) return true
         return this.oriAsset.refCount <= 1
     }
+    /** 设置加载状态 */
     SetAssetLoadState(state: AssetLoadStatus) {
         this.loadState = state
     }
+    /** 加载成功，执行回调 */
     LoadSuccess() {
         this.SetAssetLoadState(this.oriAsset ? AssetLoadStatus.Success : AssetLoadStatus.Failed)
         this.callbacks.forEach(callback => callback(this));

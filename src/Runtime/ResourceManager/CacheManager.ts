@@ -37,7 +37,7 @@ export class CacheManager extends ISingleton {
     private updateAssets(dt: number) {
         let deleteAssets: IResource[] = []
         this.usingAssets.forEach((asset) => {
-            if (asset.oriAsset.refCount <= 1) {
+            if (asset.UnuseAsset()) {
                 asset.Release()
                 deleteAssets.push(asset)
             }

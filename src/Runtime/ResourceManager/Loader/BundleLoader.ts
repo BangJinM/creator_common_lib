@@ -1,13 +1,12 @@
-import * as cc from "cc";
-import { IResourceLoader } from "./IResourceLoader";
+import { IResourceLoader } from "ccl/src/Runtime/ResourceManager/Loader/IResourceLoader";
 
 
-export class RemoteLoader extends IResourceLoader {
+export class BundleLoader extends IResourceLoader {
     Load(): void {
         let url = this.iResource.url
         let options = this.iResource.options
         let extraData = options.version || "";
-        cc.assetManager.loadRemote(url + extraData, null, (error, asset) => {
+        this.iResource.bundleCache.bundle.load(url + extraData, (error, asset) => {
             this.iResource.SetAsset(asset);
             this.iResource.LoadSuccess()
         });

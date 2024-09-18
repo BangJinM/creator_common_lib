@@ -1,8 +1,7 @@
 import * as cc from "cc";
 import { CacheManager } from "../CacheManager";
-import { IResource } from "../IResource";
+import { IResource, LoadAssetResultCallback } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
-import { LoadAssetResultCallback } from "../ResourceDefines";
 
 export class SpriteAtlasLoader extends IResourceLoader {
     GetFrameData(str: string) {
@@ -89,7 +88,6 @@ export class SpriteAtlasLoader extends IResourceLoader {
                             offset: this.GetOffsetData(spriteFrameInfo.offset),
                             originalSize: this.GetSizeData(spriteFrameInfo.sourceSize)
                         })
-                        // 跟SpriteAtlas保持一致
                         customAtlas.spriteFrames[key.replace(/.jpg|.png/, "")] = childSpriteFrame
                     }
                 }

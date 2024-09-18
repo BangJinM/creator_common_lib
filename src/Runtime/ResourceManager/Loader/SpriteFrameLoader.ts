@@ -1,8 +1,7 @@
 import * as cc from "cc";
 import { CacheManager } from "../CacheManager";
-import { IResource } from "../IResource";
+import { IResource, LoadAssetResultCallback } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
-import { LoadAssetResultCallback } from "../ResourceDefines";
 
 export class SpriteFrameLoader extends IResourceLoader {
     Load(): void {

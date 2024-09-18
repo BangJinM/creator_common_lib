@@ -15,6 +15,7 @@ export namespace Resources {
                 iResource.Load(callback)
                 return
             }
+            iResource = cacheManager.CreateAsset(fName, resourceType, bundleCache, {})
             iResource.Load(callback)
         }
 
@@ -132,7 +133,7 @@ export namespace Resources {
 
             Object.defineProperty(target, propertyKey, {
                 get: oldGet,
-                set: function (value: any | null) {
+                set: function (value: cc.Asset) {
                     let oldValue = oldGet?.call(this);
                     if (oldValue === value)
                         return;
@@ -145,7 +146,7 @@ export namespace Resources {
 
                     oldSet?.call(this, value);
 
-                    if (value && value[ASSET_CACHE_FLAG]) {
+                    if (value && value.hasOwnProperty(ASSET_CACHE_FLAG)) {
                         if (!refComp) {
                             refComp = this.node.addComponent(AssetRefComponent);
                         }

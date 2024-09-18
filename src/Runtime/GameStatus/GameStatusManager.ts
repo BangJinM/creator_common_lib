@@ -1,6 +1,6 @@
-import * as cc from "cc"
-import { GameStatus } from "./GameStatus";
+import * as cc from "cc";
 import { ISingleton, set_manager_instance } from "../ISingleton";
+import { GameStatus } from "./GameStatus";
 
 @set_manager_instance()
 @cc._decorator.ccclass("GameStatusManager")
@@ -38,16 +38,16 @@ export class GameStatusManager extends ISingleton {
         this.lastStatus = status
     }
 
-    async ChangeStatus(name: string) {
+    ChangeStatus(name: string) {
         let gameStatus = this.gameStatuses.get(name)
 
         if (!gameStatus) return
         if (this.lastStatus && this.lastStatus.NAME == gameStatus.NAME) return
 
         this.lastStatus = this.curStatus
-        if (this.lastStatus) await this.lastStatus.OnExit()
+        if (this.lastStatus) this.lastStatus.OnExit()
 
         this.curStatus = gameStatus
-        await this.curStatus.OnEnter()
+        this.curStatus.OnEnter()
     }
 }

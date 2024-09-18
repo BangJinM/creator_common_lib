@@ -8,5 +8,6 @@ export class IResourceLoader {
     constructor(iResource: IResource) {
         this.iResource = iResource;
     }
+    /** 执行加载 */
     Load(): void { }
 }
