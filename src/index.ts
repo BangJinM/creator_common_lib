@@ -6,8 +6,10 @@ export * from "./Runtime/GameStatus/GameStatus"
 export * from "./Runtime/GameStatus/GameStatusManager"
 
 export * from "./Runtime/ResourceManager/AssetRefComponent"
+export * from "./Runtime/ResourceManager/BundleCache"
 export * from "./Runtime/ResourceManager/BundleManager"
 export * from "./Runtime/ResourceManager/CacheManager"
+export * from "./Runtime/ResourceManager/IResource"
 export * from "./Runtime/ResourceManager/ResourceDefines"
 export * from "./Runtime/ResourceManager/Resources"
 
