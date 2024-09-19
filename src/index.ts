@@ -16,8 +16,8 @@ export * from "./Runtime/ResourceManager/Resources"
 export * from "./Runtime/Utils/CocosUtils"
 export * from "./Runtime/Utils/MathUtils"
 
+export * from "./Runtime/UIManager/BaseUIComp"
 export * from "./Runtime/UIManager/BaseUIContainer"
-export * from "./Runtime/UIManager/LayerProperty"
 export * from "./Runtime/UIManager/UIEnum"
 export * from "./Runtime/UIManager/UIGraphManager"
 

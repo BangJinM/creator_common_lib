@@ -1,18 +1,9 @@
-import { ISingleton } from "./ISingleton";
+import { ISingleton, set_manager_instance } from "./ISingleton";
 import { GetManagerPersistNode } from "./Utils/CocosUtils";
 
 /** 持久化存储 */
+@set_manager_instance()
 export class LocalStorageManager extends ISingleton {
-    private static instance: LocalStorageManager = null
-
-    public static GetInstance() {
-        if (!LocalStorageManager.instance) {
-            let node = GetManagerPersistNode("LocalStorageManager")
-            LocalStorageManager.instance = node.addComponent(LocalStorageManager)
-        }
-        return LocalStorageManager.instance
-    }
-
     private KEY_CONFIG: string = 'local_data';
 
     /** 玩家数据 */

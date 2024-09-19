@@ -1,7 +1,7 @@
 import * as cc from "cc";
-import { UIEnum } from "./UIEnum";
 import { ISingleton, set_manager_instance } from "../ISingleton";
 import { BaseUIContainer } from "./BaseUIContainer";
+import { UIEnum } from "./UIEnum";
 
 /** UI 根节点 管理 */
 @cc._decorator.ccclass()
@@ -51,8 +51,8 @@ export class UIGraphManager extends ISingleton {
     }
 
     Clean() {
-        this.node.destroy()
-        this.node.removeFromParent()
+        this.node.removeAllChildren()
+        this.node.destroyAllChildren()
 
         this.uiCameraNode = null
         this.uiCanvasNode = null
