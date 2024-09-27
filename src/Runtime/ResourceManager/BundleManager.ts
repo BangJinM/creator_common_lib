@@ -31,7 +31,13 @@ export class BundleManager extends ISingleton {
             this.bundleFunc.set(fName, [callback])
         }
         cc.assetManager.loadBundle(fName, (err: Error, bundle: cc.AssetManager.Bundle) => {
-            this.bundleFunc.get(fName).forEach(callback => callback(bundle))
+            if (!bundle) {
+                this.bundleFunc.get(fName).forEach(callback => callback(null))
+                return
+            }
+
+            this.AddBundle(fName, bundle)
+            this.bundleFunc.get(fName).forEach(callback => callback(this.GetBundle(fName)))
         })
     }
 

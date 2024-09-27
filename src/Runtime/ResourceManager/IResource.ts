@@ -63,6 +63,10 @@ export class IResource extends ResourceArgs {
     }
     /** 加载成功，执行回调 */
     LoadSuccess() {
+        if (this.loadState == AssetLoadStatus.Close) {
+            this.callbacks.length = 0;
+            return
+        }
         this.SetAssetLoadState(this.oriAsset ? AssetLoadStatus.Success : AssetLoadStatus.Failed)
         this.callbacks.forEach(callback => callback(this));
         this.callbacks.length = 0;

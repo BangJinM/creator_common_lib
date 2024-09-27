@@ -18,6 +18,8 @@ export enum AssetLoadStatus {
     Failed,
     /** 加载成功 */
     Success,
+    /** 加载成功 */
+    Close,
 }
 
 /**
