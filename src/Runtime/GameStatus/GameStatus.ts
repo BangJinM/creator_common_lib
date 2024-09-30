@@ -1,8 +1,8 @@
 import * as cc from "cc"
 
-@cc._decorator.ccclass()
+@cc._decorator.ccclass("GameStatus")
 export class GameStatus {
-    @cc._decorator.property(String)
+    @cc._decorator.property(cc.CCString)
     NAME: string = ""
 
     constructor(name: string) {

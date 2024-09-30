@@ -10,16 +10,15 @@ export class BundleManager extends ISingleton {
     bundleMap: Map<string, BundleCache> = new Map()
     bundleFunc: Map<string, Function[]> = new Map()
 
-    @cc._decorator.property(BundleCache)
+    @cc._decorator.property([BundleCache])
     bundlsShowInDebug: BundleCache[] = []
 
     Init() {
-        let loadBase = (name: string) => {
-            let bundle = cc.assetManager.getBundle(name)
-            this.AddBundle(name, bundle)
+        let inited = ["resources"]
+        for (const element of inited) {
+            let bundle = cc.assetManager.getBundle(element)
+            this.AddBundle(element, bundle)
         }
-
-        loadBase("resources")
     }
     LoadBundle(fName: string, callback?: Function) {
         let flag = this.bundleFunc.has(fName)
@@ -81,6 +80,7 @@ export class BundleManager extends ISingleton {
 
     UpdateBundleStatus() {
         if (!DEBUG) return
+        this.bundlsShowInDebug = []
         for (const iterator of this.bundleMap.values()) { this.bundlsShowInDebug.push(iterator) }
     }
 }

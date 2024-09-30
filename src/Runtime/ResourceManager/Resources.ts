@@ -1,6 +1,7 @@
 import * as cc from "cc";
 import { AssetRefComponent } from "./AssetRefComponent";
 import { BundleCache } from "./BundleCache";
+import { BundleManager } from "./BundleManager";
 import { CacheManager } from "./CacheManager";
 import { IResource, LoadAssetResultCallback } from "./IResource";
 import { AssetType, ResourceArgs } from "./ResourceArgs";
@@ -8,6 +9,17 @@ import { ASSET_CACHE_FLAG, OBSERVER_XX_PROPERTY_FLAG } from "./ResourceDefines";
 
 export namespace Resources {
     export class Loader {
+        static LoadAssetWithBundleName(fName: string, resourceType: AssetType, bunldleName: string, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
+            let bundleManager: BundleManager = BundleManager.GetInstance() as BundleManager
+            let bundleCache = bundleManager.GetBundle(bunldleName)
+            if (bundleCache) {
+                Loader.LoadAsset(fName, resourceType, bundleCache, callback)
+                return
+            }
+            bundleManager.LoadBundle(bunldleName, (bundleCache: BundleCache) => {
+                Loader.LoadAsset(fName, resourceType, bundleCache, callback)
+            })
+        }
         static LoadAsset(fName: string, resourceType: AssetType, bundleCache: BundleCache, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
             let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager
             let iResource: IResource = cacheManager.GetAssetData(ResourceArgs.GetUName(fName, resourceType));

@@ -7,29 +7,55 @@ import { AssetLoadStatus } from "../ResourceManager/ResourceDefines";
 import { Resources } from "../ResourceManager/Resources";
 import { BaseUIComp } from "./BaseUIComp";
 import { UIEnum } from "./UIEnum";
-import { UIStatus } from "./UIStatus";
 
-
+/** 加载状态 */
+export enum UIStatus {
+    /** 未使用 */
+    UNUSED,
+    /** 正在加载 */
+    LOADING,
+    /** 加载完成 */
+    FINISH,
+    /** 已关闭 */
+    CLOSED
+}
+/** 加载的资源信息 */
+@cc._decorator.ccclass("UiRefPrefabProperty")
 export class UiRefPrefabProperty {
     /** 对应路径+名字 */
+    @cc._decorator.property(cc.CCString)
     prefabName: string
     /** bundle名字 */
+    @cc._decorator.property(cc.CCString)
     bundleName: string
 }
 
+/** 
+ * UI基础容器 
+ * @description 用于管理界面的节点，以及界面的加载和销毁
+ */
+@cc._decorator.ccclass("BaseUIContainer")
 export class BaseUIContainer extends cc.Component {
     /** 界面类型 */
-    public uiType: UIEnum;
+    @cc._decorator.property({ type: cc.Enum(UIEnum) })
+    uiType: UIEnum;
     /** 节点名字 */
-    public layerName: string;
+    @cc._decorator.property(cc.CCString)
+    layerName: string;
+    /** 界面绑定的 脚本 */
+    ScriptAsset: new () => BaseUIComp = null
+    /** 打开的界面资源 */
+    @cc._decorator.property(UiRefPrefabProperty)
+    mainPrefabPropty: UiRefPrefabProperty
+    /** 子节点资源 */
+    @cc._decorator.property([UiRefPrefabProperty])
+    subPrefabPropities: UiRefPrefabProperty[] = []
+
     /** 子节点 */
     childNode: cc.Node = null
     /** 资源加载进度 */
     status: number = UIStatus.UNUSED
-
-    ScriptAsset: new () => BaseUIComp = null
-    mainPrefabPropty: UiRefPrefabProperty
-    subPrefabPropities: UiRefPrefabProperty[] = []
+    /** 已经加载的资源 */
     loadedResourcs: { [key: string]: IResource } = {}
 
     protected onLoad(): void {
@@ -38,7 +64,7 @@ export class BaseUIContainer extends cc.Component {
 
     OnUIResLoadBegin() {
         if (!this.mainPrefabPropty) return
-        Logger.debug(`开始加载资源：${this.layerName}`)
+        Logger.info(`开始加载界面资源：${this.layerName}`)
         let count = 0
         let bundleManager: BundleManager = BundleManager.GetInstance()
         let load = (property: UiRefPrefabProperty) => {
@@ -69,7 +95,7 @@ export class BaseUIContainer extends cc.Component {
                 return
             }
         }
-        Logger.debug(`加载资源成功，正在初始化界面：${this.layerName}`)
+        Logger.info(`加载资源成功，正在初始化界面：${this.layerName}`)
         this.childNode = Resources.UIUtils.Clone(this.loadedResourcs[this.mainPrefabPropty.prefabName].oriAsset as cc.Prefab)
         this.node.addChild(this.childNode)
         if (this.ScriptAsset) {
@@ -83,6 +109,6 @@ export class BaseUIContainer extends cc.Component {
             this.loadedResourcs[key].oriAsset?.decRef()
         }
         this.status = UIStatus.CLOSED
-        Logger.debug(`销毁界面：${this.layerName}`)
+        Logger.info(`销毁界面：${this.layerName}`)
     }
 }

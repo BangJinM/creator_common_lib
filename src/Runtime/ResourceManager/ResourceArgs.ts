@@ -4,15 +4,19 @@ import { ResourceOptions } from "./ResourceDefines";
 
 export type AssetType = cc.Constructor<cc.Asset>
 
+@cc._decorator.ccclass("ResourceArgs")
 export class ResourceArgs {
     /** 唯一名字 类型 + 路径 */
+    @cc._decorator.property(cc.CCString)
     private uName: string = "";
     /** 资源的路径 不唯一 */
+    @cc._decorator.property(cc.CCString)
     url: string = "";
     /** 资源所在的包 */
+    @cc._decorator.property({ type: BundleCache })
     bundleCache: BundleCache = null;
     /** 资源类型 */
-    assetType: AssetType;
+    assetType: AssetType = null;
     /** 资源加载选项 */
     options: ResourceOptions = null;
 

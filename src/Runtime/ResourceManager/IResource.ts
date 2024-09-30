@@ -7,8 +7,7 @@ import { ASSET_CACHE_FLAG, AssetLoadStatus, ResourceOptions } from "./ResourceDe
 
 export type LoadAssetResultCallback = (iResource: IResource) => void;
 
-
-
+@cc._decorator.ccclass("IResource")
 export class IResource extends ResourceArgs {
     /** 加载的资源 */
     oriAsset: cc.Asset = null;

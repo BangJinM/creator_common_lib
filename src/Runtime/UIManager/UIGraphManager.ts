@@ -1,5 +1,6 @@
 import * as cc from "cc";
 import { ISingleton, set_manager_instance } from "../ISingleton";
+import { Logger } from "../Logger";
 import { BaseUIContainer } from "./BaseUIContainer";
 import { UIEnum } from "./UIEnum";
 
@@ -44,6 +45,8 @@ export class UIGraphManager extends ISingleton {
             this.uiCanvasNode.addChild(childNode)
             childNode.layer = cc.Layers.Enum.UI_2D
         }
+
+        Logger.info("UIGraphManager 初始化成功")
     }
 
     GetUINode(nodeType: UIEnum) {
@@ -51,11 +54,15 @@ export class UIGraphManager extends ISingleton {
     }
 
     Clean() {
-        this.node.removeAllChildren()
+        this.RemoveAllNode()
+
         this.node.destroyAllChildren()
+        this.node.removeAllChildren()
 
         this.uiCameraNode = null
         this.uiCanvasNode = null
+
+        Logger.info("UIGraphManager 清理成功")
     }
 
 
@@ -72,13 +79,10 @@ export class UIGraphManager extends ISingleton {
             return
 
         let properties = this.uiNodes.get(baseUIContainer.uiType)
-        for (const property of properties) {
-            if (property.layerName == baseUIContainer.layerName)
-                return
-        }
-
         properties.push(baseUIContainer)
         parent.addChild(baseUIContainer.node)
+
+        Logger.info(`UIGraphManager 添加节点:${baseUIContainer.layerName}`)
     }
 
     /** 移除界面节点 */
@@ -89,14 +93,10 @@ export class UIGraphManager extends ISingleton {
         if (!this.uiNodes.has(baseUIContainer.uiType))
             return
 
-        let layerIndex = -1
         let properties = this.uiNodes.get(baseUIContainer.uiType)
-        for (let index = 0; index < properties.length; index++) {
-            let property = properties[index]
-            if (property.layerName == baseUIContainer.layerName)
-                layerIndex = index
-        }
+        if (!properties) return
 
+        let layerIndex = properties.findIndex(v => v == baseUIContainer)
         if (layerIndex < 0)
             return
 
@@ -106,15 +106,22 @@ export class UIGraphManager extends ISingleton {
             baseUIContainer.node.removeFromParent()
             baseUIContainer.node.destroy()
         }
+
+        Logger.info(`UIGraphManager 删除节点:${baseUIContainer.layerName}`)
     }
 
     /** 移除所有界面节点 */
     RemoveAllNode() {
         for (const properties of this.uiNodes.values()) {
             for (const property of properties.values()) {
-                this.RemoveNode(property)
+                if (property.node && cc.isValid(property.node)) {
+                    property.node.removeFromParent()
+                    property.node.destroy()
+                }
             }
         }
+        this.uiNodes.clear()
+        Logger.info(`UIGraphManager 清理所有节点`)
     }
 
 }

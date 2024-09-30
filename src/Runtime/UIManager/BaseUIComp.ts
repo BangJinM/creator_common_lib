@@ -8,5 +8,5 @@ export class BaseUIComp extends cc.Component {
         this.loadedResourcs = loadedResourcs
     }
 
-    
+
 }

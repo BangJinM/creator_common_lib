@@ -6,9 +6,9 @@ import { GameStatus } from "./GameStatus";
 @cc._decorator.ccclass("GameStatusManager")
 export class GameStatusManager extends ISingleton {
     gameStatuses: Map<string, GameStatus> = new Map()
-    @cc._decorator.property({ type: GameStatus })
+    @cc._decorator.property(GameStatus)
     curStatus?: GameStatus = undefined
-    @cc._decorator.property({ type: GameStatus })
+    @cc._decorator.property(GameStatus)
     lastStatus?: GameStatus = undefined
 
     Init() {

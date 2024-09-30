@@ -1,7 +1,6 @@
 import * as cc from "cc";
 import { CacheManager } from "../CacheManager";
-import { IResource } from "../IResource";
-import { LoadAssetResultCallback } from "../ResourceDefines";
+import { IResource, LoadAssetResultCallback } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
 
 /**

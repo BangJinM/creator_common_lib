@@ -10,5 +10,10 @@
         "strictNullChecks": false,
         "rootDir": "./src",
         "outDir": "./dist",
+        "types": [
+            "@cocos/creator-types/engine",
+            "@cocos/creator-types/editor",
+            "@types"
+        ]
     }
 }

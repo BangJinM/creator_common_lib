@@ -6,7 +6,7 @@ export class SceneLoader extends IResourceLoader {
     Load(): void {
         let bundleCache = this.iResource.bundleCache
         let url = this.iResource.url
-        bundleCache.bundle.loadScene(url, null, (error, asset) => {
+        bundleCache.bundle.loadScene(url, null, (error: Error, asset: cc.SceneAsset) => {
             this.iResource.SetAsset(asset);
             this.iResource.LoadSuccess()
         });
