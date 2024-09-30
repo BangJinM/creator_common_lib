@@ -1,10 +1,10 @@
-import { IECSWorld } from "../Base/IECSWorld";
-import { IECSSystem } from "../Base/IECSSystem";
 import { IComponent } from "../Base/IComponent";
+import { IECSSystem } from "../Base/IECSSystem";
+import { IECSWorld } from "../Base/IECSWorld";
+import { IEntity } from "../Base/IEntity";
 import { SingleObject } from "../Base/SingleObject";
 import { GetComponentSystem } from "../ECSDefines";
 import { ECSEntity } from "./ECSEntity";
-import { IEntity } from "../Base/IEntity";
 
 export class ECSWorld implements IECSWorld {
     /** 实体列表 */
@@ -15,13 +15,13 @@ export class ECSWorld implements IECSWorld {
     components: SingleObject<IComponent> = new SingleObject()
 
 
-    AddSystem<T extends IECSSystem>(systemC: new () => T, args: any[]): T {
+    AddSystem<T extends IECSSystem>(systemC: new () => T, args: any[] = []): T {
         let sysId = this.GetSystemKey(systemC)
         if (sysId >= 0) return this.systems.GetObject(sysId) as T
 
         let system = Reflect.construct(systemC, args)
         sysId = this.systems.CreateObject(system)
-
+        system.ecsWorld = this
         return system
     }
 

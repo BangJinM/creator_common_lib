@@ -1,4 +1,5 @@
 import * as cc from "cc";
+import { PREVIEW } from "cc/env";
 import { ISingleton, set_manager_instance } from "../ISingleton";
 import { Logger } from "../Logger";
 import { BundleCache } from "./BundleCache";
@@ -58,7 +59,7 @@ export class CacheManager extends ISingleton {
             this.usingAssets.delete(element.GetUName())
         }
 
-        if (this.dirty) {
+        if (this.dirty && PREVIEW) {
             this.resourceArgs = []
             this.usingAssets.forEach((asset) => {
                 this.resourceArgs.push(asset)

@@ -19,9 +19,15 @@ export interface IECSSystem {
 
     /**
      * 每帧更新时调用，用于处理实体的状态更新。
-     * @param entity 需要更新的实体的唯一标识符。
+     * @param deltaTime 需要更新的实体的唯一标识符。
      */
-    OnUpdate(entity: number): void;
+    OnUpdate(deltaTime: number): void;
+    /**
+     * 系统实例化
+     */
     OnEnter(): void;
+    /**
+     * 系统注销
+     */
     OnExit(): void;
 }

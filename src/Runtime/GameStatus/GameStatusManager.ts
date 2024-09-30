@@ -42,7 +42,7 @@ export class GameStatusManager extends ISingleton {
         let gameStatus = this.gameStatuses.get(name)
 
         if (!gameStatus) return
-        if (this.lastStatus && this.lastStatus.NAME == gameStatus.NAME) return
+        if (this.curStatus && this.curStatus.NAME == gameStatus.NAME) return
 
         this.lastStatus = this.curStatus
         if (this.lastStatus) this.lastStatus.OnExit()
