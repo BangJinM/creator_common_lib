@@ -97,6 +97,7 @@ export class BaseUIContainer extends cc.Component {
         }
         Logger.info(`加载资源成功，正在初始化界面：${this.layerName}`)
         this.childNode = Resources.UIUtils.Clone(this.loadedResourcs[this.mainPrefabPropty.prefabName].oriAsset as cc.Prefab)
+        this.childNode.layer = this.node.layer
         this.node.addChild(this.childNode)
         if (this.ScriptAsset) {
             let comp = this.childNode.addComponent(this.ScriptAsset)

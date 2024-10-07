@@ -15,7 +15,7 @@ export class TextureLoader extends IResourceLoader {
         let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager;
         let imageResource: IResource = cacheManager.GetAssetData(IResource.GetUName(url, cc.ImageAsset))
 
-        if (!imageResource) imageResource = cacheManager.CreateAsset(url, cc.Texture2D, bundleCache, options)
+        if (!imageResource) imageResource = cacheManager.CreateAsset(url, cc.ImageAsset, bundleCache, options)
 
         let callback: LoadAssetResultCallback = (iResource: IResource) => {
             if (imageResource.IsFinish()) {

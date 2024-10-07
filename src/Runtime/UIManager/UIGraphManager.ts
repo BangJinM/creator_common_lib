@@ -82,6 +82,8 @@ export class UIGraphManager extends ISingleton {
         properties.push(baseUIContainer)
         parent.addChild(baseUIContainer.node)
 
+        baseUIContainer.node.layer = parent.layer
+
         Logger.info(`UIGraphManager 添加节点:${baseUIContainer.layerName}`)
     }
 
@@ -123,5 +125,4 @@ export class UIGraphManager extends ISingleton {
         this.uiNodes.clear()
         Logger.info(`UIGraphManager 清理所有节点`)
     }
-
 }
