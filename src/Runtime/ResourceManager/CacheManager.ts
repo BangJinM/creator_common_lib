@@ -1,5 +1,5 @@
 import * as cc from "cc";
-import { PREVIEW } from "cc/env";
+import { DEBUG } from "cc/env";
 import { ISingleton, set_manager_instance } from "../ISingleton";
 import { Logger } from "../Logger";
 import { BundleCache } from "./BundleCache";
@@ -35,9 +35,10 @@ export class CacheManager extends ISingleton {
     }
 
     CreateAsset(fName: string, resourceType: AssetType, bundleCache: BundleCache, options: ResourceOptions): IResource {
+        this.dirty = true
+
         let iResource: IResource = new IResource(fName, resourceType, bundleCache, options)
         this.usingAssets.set(iResource.GetUName(), iResource)
-        this.dirty = true
         Logger.info(`创建资源：${iResource.GetUName()}`)
         return iResource
     }
@@ -54,12 +55,13 @@ export class CacheManager extends ISingleton {
             }
         })
 
+        if (deleteAssets.length > 0) this.dirty = true
+
         for (const element of deleteAssets) {
-            this.dirty = true
             this.usingAssets.delete(element.GetUName())
         }
 
-        if (this.dirty && PREVIEW) {
+        if (this.dirty && DEBUG) {
             this.resourceArgs = []
             this.usingAssets.forEach((asset) => {
                 this.resourceArgs.push(asset)

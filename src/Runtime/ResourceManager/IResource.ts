@@ -81,8 +81,9 @@ export class IResource extends ResourceArgs {
             this.LoadSuccess()
             return
         }
-        if (this.loadState == AssetLoadStatus.Loading)
-            return
+        if (this.loadState == AssetLoadStatus.Loading) return
+
+        this.loadState = AssetLoadStatus.Loading
         this.loader.Load()
     }
 }
