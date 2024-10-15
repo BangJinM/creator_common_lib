@@ -11,9 +11,9 @@
         "rootDir": "./src",
         "outDir": "./dist",
         "types": [
-            "@cocos/creator-types/engine",
-            "@cocos/creator-types/editor",
-            "@types"
+            "cocos_types/cc",
+            "cocos_types/editor",
+            "cocos_types/env"
         ]
     }
 }
