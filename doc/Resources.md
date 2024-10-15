@@ -1,0 +1,15 @@
+### 核心模块
+1. CacheManager管理缓存
+2. ResourceManager加载资源
+3. AssetRefComponent管理资源refCount
+4. BundleManager管理Bundle的生命周期
+### 资源引用管理
+1. 使用AssetRefComponent对Node依赖的所有资源进行管理，对象销毁时，AssetRefComponent会减少对应资源的引用
+2. 使用装饰器注入sprite、button、label等对象中资源的setter，修改时更新AssetRefComponent中的资源，其他资源类似
+3. 克隆节点时立即增加Node引用的资源计数
+4. 克隆Prefab时，给Node增加AssetRefComponent，并将Prefab资源纳入管理
+### 相关的问题
+1. 每个资源调用addRef，decRef时机
+  1. 如果使用Resource.UIUtils，框架自动帮你管理引用
+  2. 使用资源加载接口，则需要在使用前将对应的node纳入管理
+  3. 资源引用分为引擎自动引用和调用接口引用，导致引用策略只能使用Asset的refCount
