@@ -4,47 +4,16 @@ import { IResource, LoadAssetResultCallback } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
 
 export class SpriteAtlasLoader extends IResourceLoader {
-    GetFrameData(str: string) {
-        if (str.length < 13) {
-            return null;
-        }
-        let newStr: string = str;
-        newStr = newStr.slice(2);
-        newStr = newStr.slice(0, newStr.length - 2);
-        let newList_0: string[] = newStr.split('},{');
-        let newList_1: string[] = newList_0[0].split(",");
-        let newList_2: string[] = newList_0[1].split(",");
-        if (newList_1.length < 2 || newList_2.length < 2) {
-            return null;
-        }
-        return new cc.Rect(parseInt(newList_1[0]), parseInt(newList_1[1]), parseInt(newList_2[0]), parseInt(newList_2[1]));
-    }
+    GetNumArray(str: string) {
+        let regex: RegExp = /[0-9\-\.]+/g;
+        let result: number[] = []
 
-    GetSizeData(str: string) {
-        if (str.length < 5) {
-            return null;
+        while (true) {
+            let t = regex.exec(str)
+            if (!t) break
+            result.push(parseInt(t[0]))
         }
-        let newStr: string = str;
-        newStr = newStr.slice(1);
-        newStr = newStr.slice(0, newStr.length - 1);
-        let newList_0: string[] = newStr.split(',');
-        if (newList_0.length < 2) {
-            return null;
-        }
-        return new cc.Size(parseInt(newList_0[0]), parseInt(newList_0[1]));
-    }
-    GetOffsetData(str: string) {
-        if (str.length < 5) {
-            return null;
-        }
-        let newStr: string = str;
-        newStr = newStr.slice(1);
-        newStr = newStr.slice(0, newStr.length - 1);
-        let newList_0: string[] = newStr.split(',');
-        if (newList_0.length < 2) {
-            return null;
-        }
-        return new cc.Vec2(parseInt(newList_0[0]), parseInt(newList_0[1]));
+        return result
     }
 
 
@@ -81,12 +50,17 @@ export class SpriteAtlasLoader extends IResourceLoader {
                     for (const key of Object.keys(frames)) {
                         let childSpriteFrame = new cc.SpriteFrame()
                         let spriteFrameInfo = frames[key]
+
+                        let array1 = this.GetNumArray(spriteFrameInfo.frame)
+                        let array2 = this.GetNumArray(spriteFrameInfo.offset)
+                        let array3 = this.GetNumArray(spriteFrameInfo.sourceSize)
+
                         childSpriteFrame.reset({
                             texture: spriteFrame.texture,
-                            rect: this.GetFrameData(spriteFrameInfo.frame),
+                            rect: new cc.Rect(...array1),
                             isRotate: spriteFrameInfo.rotated,
-                            offset: this.GetOffsetData(spriteFrameInfo.offset),
-                            originalSize: this.GetSizeData(spriteFrameInfo.sourceSize)
+                            offset: new cc.Vec2(...array2),
+                            originalSize: new cc.Size(...array3)
                         })
                         customAtlas.spriteFrames[key.replace(/.jpg|.png/, "")] = childSpriteFrame
                     }
