@@ -4,9 +4,12 @@ import { IResourceLoader } from "./Loader/IResourceLoader";
 import { LoaderFactory } from "./Loader/LoaderFactory";
 import { AssetType, ResourceArgs } from "./ResourceArgs";
 import { ASSET_CACHE_FLAG, AssetLoadStatus, ResourceOptions } from "./ResourceDefines";
-
+/** 加载回调 */
 export type LoadAssetResultCallback = (iResource: IResource) => void;
 
+/**
+ * 资源依赖
+ */
 @cc._decorator.ccclass("IResource")
 export class IResource extends ResourceArgs {
     /** 加载的资源 */
@@ -70,11 +73,11 @@ export class IResource extends ResourceArgs {
         this.callbacks.forEach(callback => callback(this));
         this.callbacks.length = 0;
     }
-
+    /** 加载结束 */
     IsFinish() {
         return this.loadState == AssetLoadStatus.Success || this.loadState == AssetLoadStatus.Failed
     }
-
+    /** 加载 */
     Load(callback: LoadAssetResultCallback) {
         this.callbacks.push(callback)
         if (this.IsFinish()) {

@@ -4,6 +4,9 @@ import { ResourceOptions } from "./ResourceDefines";
 
 export type AssetType = cc.Constructor<cc.Asset>
 
+/**
+ * 资源加载参数
+ */
 @cc._decorator.ccclass("ResourceArgs")
 export class ResourceArgs {
     /** 唯一名字 类型 + 路径 */

@@ -8,7 +8,16 @@ import { AssetType, ResourceArgs } from "./ResourceArgs";
 import { ASSET_CACHE_FLAG, OBSERVER_XX_PROPERTY_FLAG } from "./ResourceDefines";
 
 export namespace Resources {
+    /** 资源加载类 */
     export class Loader {
+        /**
+         * 加载资源
+         * @param fName 资源路径
+         * @param resourceType 资源类型
+         * @param bunldleName bundle名字
+         * @param callback 加载回调
+         * @returns 
+         */
         static LoadAssetWithBundleName(fName: string, resourceType: AssetType, bunldleName: string, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
             let bundleManager: BundleManager = BundleManager.GetInstance() as BundleManager
             let bundleCache = bundleManager.GetBundle(bunldleName)
@@ -20,6 +29,14 @@ export namespace Resources {
                 Loader.LoadAsset(fName, resourceType, bundleCache, callback)
             })
         }
+        /**
+         * 加载资源
+         * @param fName 资源路径
+         * @param resourceType 资源类型
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
         static LoadAsset(fName: string, resourceType: AssetType, bundleCache: BundleCache, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
             let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager
             let iResource: IResource = cacheManager.GetAssetData(ResourceArgs.GetUName(fName, resourceType));
@@ -30,29 +47,65 @@ export namespace Resources {
             iResource = cacheManager.CreateAsset(fName, resourceType, bundleCache, {})
             iResource.Load(callback)
         }
-
+        /**
+         * 加载场景
+         * @param fName 资源路径
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
         static LoadSceneAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.SceneAsset, bundleCache, callback)
         }
-
-        static LoadPrefabAsset(url: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
-            return Loader.LoadAsset(url, cc.Prefab, bundleCache, callback)
+        /**
+         * 加载Prefab
+         * @param fName 资源路径
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
+        static LoadPrefabAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+            return Loader.LoadAsset(fName, cc.Prefab, bundleCache, callback)
         }
-
-        static LoadTextureAsset(url: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
-            return Loader.LoadAsset(url, cc.Texture2D, bundleCache, callback)
+        /**
+         * 加载Texture2D
+         * @param fName 资源路径
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
+        static LoadTextureAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+            return Loader.LoadAsset(fName, cc.Texture2D, bundleCache, callback)
         }
-
-        static LoadSpriteFrameAsset(url: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
-            return Loader.LoadAsset(url, cc.SpriteFrame, bundleCache, callback)
+        /**
+         * 加载SpriteFrame
+         * @param fName 资源路径
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
+        static LoadSpriteFrameAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+            return Loader.LoadAsset(fName, cc.SpriteFrame, bundleCache, callback)
         }
-
-        static LoadSpriteAtlasAsset(url: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
-            return Loader.LoadAsset(url, cc.SpriteAtlas, bundleCache, callback)
+        /**
+         * 加载图集
+         * @param fName 资源路径
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
+        static LoadSpriteAtlasAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+            return Loader.LoadAsset(fName, cc.SpriteAtlas, bundleCache, callback)
         }
-
-        static LoadAudioClipAsset(url: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
-            return Loader.LoadAsset(url, cc.AudioClip, bundleCache, callback)
+        /**
+         * 加载音频片段
+         * @param fName 资源路径
+         * @param bundleCache bundleCache bundle缓存
+         * @param callback 加载回调
+         * @returns 
+         */
+        static LoadAudioClipAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+            return Loader.LoadAsset(fName, cc.AudioClip, bundleCache, callback)
         }
     }
 
@@ -88,9 +141,9 @@ export namespace Resources {
         /**
          * 设置图片
          */
-        static LoadSpriteFrame(sprite: cc.Sprite, url: string, bundleCache?: BundleCache) {
+        static LoadSpriteFrame(sprite: cc.Sprite, fName: string, bundleCache?: BundleCache) {
             ResourceRef.ObserverSpriteProperty(sprite)
-            Loader.LoadSpriteFrameAsset(url, bundleCache, (spriteFrame: IResource) => {
+            Loader.LoadSpriteFrameAsset(fName, bundleCache, (spriteFrame: IResource) => {
                 if (!cc.isValid(sprite)) return
                 sprite.spriteFrame = spriteFrame.oriAsset as cc.SpriteFrame
             })
@@ -178,7 +231,7 @@ export namespace Resources {
 
             return true
         }
-
+        /** 增加资源监听 */
         static addObserverPropertyTag(comp: cc.Component) {
             Object.defineProperty(comp, OBSERVER_XX_PROPERTY_FLAG, {
                 value: true,
@@ -186,7 +239,7 @@ export namespace Resources {
                 enumerable: false,
             })
         }
-
+        /** 增加Sprite资源监听 */
         static ObserverSpriteProperty(sprite: cc.Sprite) {
             if (!ResourceRef.checkFunc(sprite))
                 return;

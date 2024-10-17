@@ -1,7 +1,6 @@
 import * as cc from "cc";
 import { IResourceLoader } from "ccl/src/Runtime/ResourceManager/Loader/IResourceLoader";
 
-
 export class BundleLoader extends IResourceLoader {
     Load(): void {
         let url = this.iResource.url
