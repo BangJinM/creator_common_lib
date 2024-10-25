@@ -1,5 +1,5 @@
 import * as cc from "cc";
-import { IResourceLoader } from "ccl/src/Runtime/ResourceManager/Loader/IResourceLoader";
+import { IResourceLoader } from "./IResourceLoader";
 
 export class BundleLoader extends IResourceLoader {
     Load(): void {

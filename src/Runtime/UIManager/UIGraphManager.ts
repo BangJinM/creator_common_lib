@@ -28,6 +28,7 @@ export class UIGraphManager extends ISingleton {
             uiCamera.visibility = cc.Layers.Enum.UI_2D | cc.Layers.Enum.UI_3D
             uiCamera.clearFlags = cc.Camera.ClearFlag.DEPTH_ONLY
             uiCamera.projection = cc.Camera.ProjectionType.ORTHO
+            uiCamera.priority = 0xffffff
         }
 
         if (!this.uiCanvasNode) {
