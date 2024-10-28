@@ -4,18 +4,12 @@ import { IResource, LoadAssetResultCallback } from "../IResource";
 import { IResourceLoader } from "./IResourceLoader";
 
 export class SpriteAtlasLoader extends IResourceLoader {
-    GetNumArray(str: string) {
-        let regex: RegExp = /[0-9\-\.]+/g;
-        let result: number[] = []
-
-        while (true) {
-            let t = regex.exec(str)
-            if (!t) break
-            result.push(parseInt(t[0]))
-        }
-        return result
+    GetNumArray(str: string): number[] {
+        // 使用正则表达式匹配所有数字
+        const matches = str.match(/[0-9\-\.]+/g);
+        // 将匹配到的字符串数组转换为数字数组
+        return matches ? matches.map(Number) : [];
     }
-
 
     Load(): void {
         let url = this.iResource.url
