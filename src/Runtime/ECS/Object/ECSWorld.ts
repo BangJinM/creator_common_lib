@@ -22,6 +22,7 @@ export class ECSWorld implements IECSWorld {
         let system = Reflect.construct(systemC, args)
         sysId = this.systems.CreateObject(system)
         system.ecsWorld = this
+        system.OnEnter()
         return system
     }
 
@@ -42,6 +43,7 @@ export class ECSWorld implements IECSWorld {
             system.OnEntityExit(entity)
         }
         this.systems.RemoveObject(sysId)
+        system.OnExit()
     }
 
     GetSystem<T extends IECSSystem>(systemC: new () => T): T {

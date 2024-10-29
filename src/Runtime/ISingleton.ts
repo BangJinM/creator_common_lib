@@ -1,4 +1,5 @@
 import * as cc from "cc";
+import { DEBUG } from "cc/env";
 import { IObject } from "./IObject";
 import { GetManagerPersistNode } from "./Utils/CocosUtils";
 
@@ -11,6 +12,7 @@ export function set_manager_instance(pName?: string) {
             if (!target.instance) {
                 let node = GetManagerPersistNode(`__${target.name}__`, pName) as cc.Node
                 target.instance = node.addComponent(target)
+                if (DEBUG) window[target.name] = target.instance
             }
             return target.instance
         }
