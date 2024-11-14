@@ -1,6 +1,6 @@
 import * as cc from "cc";
 import { DEBUG } from "cc/env";
-import { ISingleton, set_manager_instance } from "../ISingleton";
+import { ISingleton } from "../ISingleton";
 import { Logger } from "../Logger";
 import { BundleCache } from "./BundleCache";
 import { IResource } from "./IResource";
@@ -9,7 +9,7 @@ import { ResourceOptions } from "./ResourceDefines";
 
 
 /** 缓存管理类 */
-@set_manager_instance()
+
 @cc._decorator.ccclass("CacheManager")
 export class CacheManager extends ISingleton {
     private usingAssets: Map<string, IResource> = new Map()

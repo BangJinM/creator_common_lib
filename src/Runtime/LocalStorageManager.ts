@@ -1,8 +1,7 @@
-import { ISingleton, set_manager_instance } from "./ISingleton";
-import { GetManagerPersistNode } from "./Utils/CocosUtils";
+import { ISingleton } from "./ISingleton";
 
 /** 持久化存储 */
-@set_manager_instance()
+
 export class LocalStorageManager extends ISingleton {
     private KEY_CONFIG: string = 'local_data';
 

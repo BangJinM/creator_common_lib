@@ -1,12 +1,11 @@
 import * as cc from "cc";
-import { ISingleton, set_manager_instance } from "../ISingleton";
+import { ISingleton } from "../ISingleton";
 import { Logger } from "../Logger";
 import { BaseUIContainer } from "./BaseUIContainer";
 import { UIEnum } from "./UIEnum";
 
 /** UI 根节点 管理 */
-@cc._decorator.ccclass()
-@set_manager_instance()
+@cc._decorator.ccclass("UIGraphManager")
 export class UIGraphManager extends ISingleton {
     /** ui相机 */
     uiCameraNode: cc.Node = null

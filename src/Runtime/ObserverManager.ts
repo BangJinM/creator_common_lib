@@ -1,9 +1,9 @@
-import { ISingleton, set_manager_instance } from "./ISingleton"
+import { ISingleton } from "./ISingleton"
 
 export type INoticeData = { [key: string]: any }
 export type INoticeFunction = (data: INoticeData) => void
 
-@set_manager_instance()
+
 export class SubjectManager extends ISingleton {
     observers: { [key: number]: INoticeFunction[] } = {}
 

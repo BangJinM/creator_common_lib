@@ -1,6 +1,6 @@
-import { ISingleton, set_manager_instance } from "../ISingleton";
+import { ISingleton } from "../ISingleton";
 
-@set_manager_instance()
+
 export class TimeManager extends ISingleton {
-
+    
 }

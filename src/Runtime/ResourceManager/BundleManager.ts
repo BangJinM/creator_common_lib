@@ -1,11 +1,11 @@
 import * as cc from "cc";
 import { DEBUG } from "cc/env";
-import { ISingleton, set_manager_instance } from "../ISingleton";
+import { ISingleton } from "../ISingleton";
 import { BundleCache } from "./BundleCache";
 
 /** 缓存管理类 */
-@set_manager_instance()
-@cc._decorator.ccclass()
+
+@cc._decorator.ccclass("BundleManager")
 export class BundleManager extends ISingleton {
     bundleMap: Map<string, BundleCache> = new Map()
     bundleFunc: Map<string, Function[]> = new Map()
