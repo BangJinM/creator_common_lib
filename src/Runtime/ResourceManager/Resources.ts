@@ -9,7 +9,7 @@ import { ASSET_CACHE_FLAG, OBSERVER_XX_PROPERTY_FLAG } from "./ResourceDefines";
 
 export namespace Resources {
     /** 资源加载类 */
-    export class Loader {
+    export namespace Loader {
         /**
          * 加载资源
          * @param fName 资源路径
@@ -18,7 +18,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadAssetWithBundleName(fName: string, resourceType: AssetType, bunldleName: string, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
+        export function LoadAssetWithBundleName(fName: string, resourceType: AssetType, bunldleName: string, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
             let bundleManager: BundleManager = BundleManager.GetInstance() as BundleManager
             let bundleCache = bundleManager.GetBundle(bunldleName)
             if (bundleCache) {
@@ -37,7 +37,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadAsset(fName: string, resourceType: AssetType, bundleCache: BundleCache, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
+        export function LoadAsset(fName: string, resourceType: AssetType, bundleCache: BundleCache, callback: LoadAssetResultCallback = (iResource: IResource) => { }) {
             let cacheManager: CacheManager = CacheManager.GetInstance() as CacheManager
             let iResource: IResource = cacheManager.GetAssetData(ResourceArgs.GetUName(fName, resourceType));
             if (iResource) {
@@ -54,7 +54,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadSceneAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+        export function LoadSceneAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.SceneAsset, bundleCache, callback)
         }
         /**
@@ -64,7 +64,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadPrefabAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+        export function LoadPrefabAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.Prefab, bundleCache, callback)
         }
         /**
@@ -74,7 +74,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadTextureAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+        export function LoadTextureAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.Texture2D, bundleCache, callback)
         }
         /**
@@ -84,7 +84,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadSpriteFrameAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+        export function LoadSpriteFrameAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.SpriteFrame, bundleCache, callback)
         }
         /**
@@ -94,7 +94,7 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadSpriteAtlasAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+        export function LoadSpriteAtlasAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.SpriteAtlas, bundleCache, callback)
         }
         /**
@@ -104,24 +104,24 @@ export namespace Resources {
          * @param callback 加载回调
          * @returns 
          */
-        static LoadAudioClipAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
+        export function LoadAudioClipAsset(fName: string, bundleCache: BundleCache, callback: LoadAssetResultCallback) {
             return Loader.LoadAsset(fName, cc.AudioClip, bundleCache, callback)
         }
     }
 
-    export class UIUtils {
+    export namespace UIUtils {
 
         /**
          * 克隆时，需要增加引用
          */
-        static AfterInstantiatePrefab(origin: cc.Prefab, clone: cc.Node) {
+        export function AfterInstantiatePrefab(origin: cc.Prefab, clone: cc.Node) {
             let prefabRef: AssetRefComponent = clone.addComponent(AssetRefComponent)
             prefabRef.AddAsset(origin)
         }
         /**
          * 克隆时，需要增加引用
          */
-        static AfterInstantiateNode(clone: cc.Node) {
+        export function AfterInstantiateNode(clone: cc.Node) {
             let assetRefs = clone.getComponentsInChildren(AssetRefComponent)
             for (let i = 0; i < assetRefs.length; i++) {
                 assetRefs[i].assets.forEach(asset => {
@@ -131,7 +131,7 @@ export namespace Resources {
         }
 
         /** 克隆一个节点或者Prefab */
-        static Clone(origin: cc.Node | cc.Prefab) {
+        export function Clone(origin: cc.Node | cc.Prefab) {
             let node: cc.Node = cc.instantiate(origin) as cc.Node
             if (origin instanceof cc.Prefab) UIUtils.AfterInstantiatePrefab(origin, node)
             else UIUtils.AfterInstantiateNode(node)
@@ -141,7 +141,7 @@ export namespace Resources {
         /**
          * 设置图片
          */
-        static LoadSpriteFrame(sprite: cc.Sprite, fName: string, bundleCache?: BundleCache) {
+        export function LoadSpriteFrame(sprite: cc.Sprite, fName: string, bundleCache?: BundleCache) {
             ResourceRef.ObserverSpriteProperty(sprite)
             Loader.LoadSpriteFrameAsset(fName, bundleCache, (spriteFrame: IResource) => {
                 if (!cc.isValid(sprite)) return
@@ -151,7 +151,7 @@ export namespace Resources {
         /**
          * 设置按钮
          */
-        static LoadButton(button: cc.Button, normalSprite: string, pressedSprite: string, hoverSprite: string, disabledSprite: string, bundleCache?: BundleCache) {
+        export function LoadButton(button: cc.Button, normalSprite: string, pressedSprite: string, hoverSprite: string, disabledSprite: string, bundleCache?: BundleCache) {
             ResourceRef.ObserverButtonProperty(button)
 
             if (normalSprite) {
@@ -181,13 +181,13 @@ export namespace Resources {
         }
     }
 
-    export class ResourceRef {
+    export namespace ResourceRef {
         /**
          * 增加资源监听
          * @description 为什么要用这种方式？ 在游戏中资源改变是一个常见的事情，如果每一个资源改变，都调用addRef和decRef，会增加不必要的心智开销，所以这里采用这种方式、
          * @description 缺点：需要手动的调用ObserverPropertySetter，但可以通过统一的入口进行配置
          */
-        static ObserverPropertySetter<T extends cc.Component>(target: T, propertyKey: string) {
+        export function ObserverPropertySetter<T extends cc.Component>(target: T, propertyKey: string) {
             let descriptor = Object.getOwnPropertyDescriptor(target.constructor.prototype, propertyKey);
 
             if (!descriptor)
@@ -223,7 +223,7 @@ export namespace Resources {
             });
         }
 
-        static checkFunc(comp: cc.Component) {
+        export function checkFunc(comp: cc.Component) {
             if (!comp)
                 return false
             if (comp.hasOwnProperty(OBSERVER_XX_PROPERTY_FLAG))
@@ -232,7 +232,7 @@ export namespace Resources {
             return true
         }
         /** 增加资源监听 */
-        static addObserverPropertyTag(comp: cc.Component) {
+        export function addObserverPropertyTag(comp: cc.Component) {
             Object.defineProperty(comp, OBSERVER_XX_PROPERTY_FLAG, {
                 value: true,
                 writable: false,
@@ -240,7 +240,7 @@ export namespace Resources {
             })
         }
         /** 增加Sprite资源监听 */
-        static ObserverSpriteProperty(sprite: cc.Sprite) {
+        export function ObserverSpriteProperty(sprite: cc.Sprite) {
             if (!ResourceRef.checkFunc(sprite))
                 return;
 
@@ -249,7 +249,7 @@ export namespace Resources {
             ResourceRef.ObserverPropertySetter<cc.Sprite>(sprite, "spriteAtlas");
         }
         /** 增加Button资源监听 */
-        static ObserverButtonProperty(button: cc.Button) {
+        export function ObserverButtonProperty(button: cc.Button) {
             if (!ResourceRef.checkFunc(button))
                 return;
             ResourceRef.addObserverPropertyTag(button)
@@ -260,7 +260,7 @@ export namespace Resources {
         }
 
         /** 增加Label资源监听 */
-        static ObserverLabelProperty(label: cc.Label) {
+        export function ObserverLabelProperty(label: cc.Label) {
             if (!ResourceRef.checkFunc(label))
                 return;
             ResourceRef.addObserverPropertyTag(label)
@@ -270,7 +270,7 @@ export namespace Resources {
         }
 
         /** 增加AudioSource资源监听 */
-        static ObserverAudioSourceProperty(audioSource: cc.AudioSource) {
+        export function ObserverAudioSourceProperty(audioSource: cc.AudioSource) {
             if (!ResourceRef.checkFunc(audioSource))
                 return;
             ResourceRef.addObserverPropertyTag(audioSource)
@@ -278,7 +278,7 @@ export namespace Resources {
         }
 
         /** 增加Tmx资源监听 */
-        static ObserverTiledMapProperty(tiledMap: cc.TiledMap) {
+        export function ObserverTiledMapProperty(tiledMap: cc.TiledMap) {
             if (!ResourceRef.checkFunc(tiledMap))
                 return;
             ResourceRef.addObserverPropertyTag(tiledMap)

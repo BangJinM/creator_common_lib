@@ -1,9 +1,12 @@
-import { ISingleton } from "./ISingleton"
+import * as cc from "cc";
+
+import { ISingleton } from "./ISingleton";
 
 export type INoticeData = { [key: string]: any }
 export type INoticeFunction = (data: INoticeData) => void
 
 
+@cc._decorator.ccclass("SubjectManager")
 export class SubjectManager extends ISingleton {
     observers: { [key: number]: INoticeFunction[] } = {}
 
