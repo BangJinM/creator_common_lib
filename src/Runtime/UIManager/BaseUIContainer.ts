@@ -30,8 +30,15 @@ export class UiRefPrefabProperty {
 }
 
 export interface BaseUIComp {
+    /** 界面加载 */
     OnUILoad(): void
+    /** 子节点加载 */
+    OnChildUILoad(): void
+    /** 界面更新 */
     OnUIUpdate(dl: number): void
+    /** 子节点销毁 */
+    OnChildUIDestroy(): void
+    /** 界面销毁 */
     OnUIDestroy(): void
 }
 
@@ -63,7 +70,8 @@ export class BaseUIContainer extends cc.Component implements BaseUIComp {
     loadedResourcs: { [key: string]: IResource } = {}
 
     protected onLoad(): void {
-        this.OnUILoadBegin()
+        this.OnUILoad()
+        this.OnLoadBeginChild()
     }
     protected update(dt: number): void {
         if (this.status = UIStatus.FINISH) this.OnUIUpdate(dt)
@@ -75,9 +83,10 @@ export class BaseUIContainer extends cc.Component implements BaseUIComp {
         this.status = UIStatus.CLOSED
         Logger.info(`销毁界面：${this.layerName}`)
 
+        this.OnChildUIDestroy()
         this.OnUIDestroy()
     }
-    OnUILoadBegin() {
+    OnLoadBeginChild() {
         if (!this.mainPrefabPropty) return
         Logger.info(`开始加载界面资源：${this.layerName}`)
         let count = 0
@@ -91,7 +100,7 @@ export class BaseUIContainer extends cc.Component implements BaseUIComp {
                 this.loadedResourcs[property.prefabName] = iResource
 
                 if (count <= 0) {
-                    this.OnUILoadFinish()
+                    this.OnFinishLoadChildUI()
                 }
             })
         }
@@ -101,7 +110,7 @@ export class BaseUIContainer extends cc.Component implements BaseUIComp {
             load(element)
         }
     }
-    OnUILoadFinish() {
+    OnFinishLoadChildUI() {
         this.status = UIStatus.FINISH
         for (const key in this.loadedResourcs) {
             if (this.loadedResourcs[key].loadState == AssetLoadStatus.Failed) {
@@ -114,9 +123,11 @@ export class BaseUIContainer extends cc.Component implements BaseUIComp {
         this.childNode.layer = this.node.layer
         this.node.addChild(this.childNode)
 
-        this.OnUILoad()
+        this.OnChildUILoad()
     }
     OnUILoad(): void { }
+    OnChildUILoad(): void { }
     OnUIUpdate(dl: number): void { }
+    OnChildUIDestroy(): void { }
     OnUIDestroy(): void { }
 }
