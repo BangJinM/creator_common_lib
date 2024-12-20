@@ -24,4 +24,4 @@ export * from "./Runtime/UIManager/UIEnum"
 export * from "./Runtime/UIManager/UIGraphManager"
 export * from "./Runtime/Utils/CocosUtils"
 export * from "./Runtime/Utils/MathUtils"
-
+export * from "./Runtime/Graph/QuadTree"

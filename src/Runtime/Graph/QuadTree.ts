@@ -7,10 +7,10 @@ export enum Quadrant {
 }
 
 export class QuadBoundary {
-    x: number = 0;
-    y: number = 0;
-    width: number = 0;
-    height: number = 0;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 
     constructor(x: number, y: number, width: number = 1, height: number = 1) {
         this.x = x
@@ -20,12 +20,15 @@ export class QuadBoundary {
     }
 }
 
-export class QuadObject<T> extends QuadBoundary {
-    object: T;
-}
+// export class QuadObject<T> extends QuadBoundary {
+//     /** 唯一Id */
+//     idx: number = 0
+//     /** 数据 */
+//     object: T;
+// }
 
 /** 四叉树 */
-export class QuadTree<T> {
+export class QuadTree {
     /** 最大对象数量 */
     maxObjectCount: number = 0;
     /** 最大深度 */
@@ -33,9 +36,9 @@ export class QuadTree<T> {
     /** 当前深度 */
     deepth: number = 0;
     /** 子节点 */
-    children: QuadTree<T>[] = [];
+    children: QuadTree[] = [];
     /** 对象 */
-    objects: Set<QuadObject<T>> = new Set();
+    objects: Set<QuadBoundary> = new Set();
     /** 四叉树边界 */
     boundary: QuadBoundary;
 
@@ -46,7 +49,7 @@ export class QuadTree<T> {
         this.deepth = deepth
     }
 
-    Add(object: QuadObject<T>) {
+    Add(object: QuadBoundary) {
         if (this.children.length > 0) {
             let indexs = this.GetQuadrant(object)
             for (const element of indexs) {
@@ -62,7 +65,20 @@ export class QuadTree<T> {
             this.Split()
         }
     }
-    Find(object: QuadObject<T>) {
+
+    Remove(object: QuadBoundary) {
+        if (this.children.length > 0) {
+            let indexs = this.GetQuadrant(object)
+            for (const element of indexs) {
+                this.children[element].Remove(object)
+            }
+            return
+        }
+
+        this.objects.delete(object)
+    }
+
+    Find(object: QuadBoundary) {
         let indexes = this.GetQuadrant(object);
         let results: any[] = [];
 
@@ -75,18 +91,22 @@ export class QuadTree<T> {
         return Array.from(this.objects.values());
     }
 
-    FindTree(object: QuadBoundary): QuadTree<T> {
+    FindTree(object: QuadBoundary): QuadTree[] {
         let indexes = this.GetQuadrant(object);
 
-        if (this.children.length <= 0) return this
+        let results: QuadTree[] = []
+        if (this.children.length <= 0) return [this]
 
         if (this.children.length > 0) {
             for (const element of indexes) {
-                return this.children[element].FindTree(object)
+                results = results.concat(this.children[element].FindTree(object))
             }
         }
+        return results
+    }
 
-        return null
+    UpdateObject(object: QuadBoundary) {
+        // let 
     }
 
     Split() {
@@ -124,4 +144,8 @@ export class QuadTree<T> {
         return indexs;
     }
 
+    Clean() {
+        this.objects.clear()
+        this.children = []
+    }
 }
