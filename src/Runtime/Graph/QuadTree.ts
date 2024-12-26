@@ -29,6 +29,8 @@ export class QuadBoundary {
 
 /** 四叉树 */
 export class QuadTree {
+    /** 当前对象数量包含子节点 */
+    objectCount: number = 0
     /** 最大对象数量 */
     maxObjectCount: number = 0;
     /** 最大深度 */
@@ -50,6 +52,7 @@ export class QuadTree {
     }
 
     Add(object: QuadBoundary) {
+        this.objectCount++
         if (this.children.length > 0) {
             let indexs = this.GetQuadrant(object)
             for (const element of indexs) {
@@ -57,7 +60,6 @@ export class QuadTree {
             }
             return
         }
-
         this.objects.add(object)
 
         // 分割
@@ -67,10 +69,20 @@ export class QuadTree {
     }
 
     Remove(object: QuadBoundary) {
+        this.objectCount--
         if (this.children.length > 0) {
             let indexs = this.GetQuadrant(object)
             for (const element of indexs) {
                 this.children[element].Remove(object)
+            }
+
+            if (this.objectCount <= this.maxObjectCount) {
+                for (const element of this.children) {
+                    for (const obj of element.objects) {
+                        this.objects.add(obj)
+                    }
+                }
+                this.children = []
             }
             return
         }
@@ -105,10 +117,6 @@ export class QuadTree {
         return results
     }
 
-    UpdateObject(object: QuadBoundary) {
-        // let 
-    }
-
     Split() {
         let midX = this.boundary.x + this.boundary.width / 2
         let midY = this.boundary.y + this.boundary.height / 2
@@ -122,7 +130,10 @@ export class QuadTree {
         this.children[Quadrant.BottomRight] = new QuadTree(new QuadBoundary(midX, this.boundary.y, midW, midH), this.maxObjectCount, this.maxDeepth, this.deepth + 1);
 
         for (let item of this.objects) {
-            this.Add(item)
+            let indexs = this.GetQuadrant(item)
+            for (const element of indexs) {
+                this.children[element].Add(item)
+            }
         }
         this.objects.clear()
     }
@@ -136,10 +147,10 @@ export class QuadTree {
         let endX = boundary.x + boundary.width
         let endY = boundary.y + boundary.height
 
-        if (endX > midX && endY > midY) indexs.push(Quadrant.TopRight)
-        if (boundary.x < midX && endY > midY) indexs.push(Quadrant.TopLeft)
-        if (boundary.x < midX && boundary.y < midY) indexs.push(Quadrant.BottomLeft)
-        if (endX > midX && endY < midY) indexs.push(Quadrant.BottomRight)
+        if (endX >= midX && endY >= midY) indexs.push(Quadrant.TopRight)
+        if (boundary.x <= midX && endY >= midY) indexs.push(Quadrant.TopLeft)
+        if (boundary.x <= midX && boundary.y <= midY) indexs.push(Quadrant.BottomLeft)
+        if (endX >= midX && boundary.y <= midY) indexs.push(Quadrant.BottomRight)
 
         return indexs;
     }
