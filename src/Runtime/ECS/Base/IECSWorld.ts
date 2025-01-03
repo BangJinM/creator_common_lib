@@ -40,6 +40,12 @@ export interface IECSWorld {
     CreateEntity<T extends IEntity>(entityC: new () => T): number
 
     /**
+     * 在世界中获取实体。
+     * @returns 唯一标识符。
+     */
+    GetEntity<T extends IEntity>(key: number): T;
+
+    /**
      * 从世界中删除一个实体。
      * @param entity 要删除的实体的唯一标识符。
      */

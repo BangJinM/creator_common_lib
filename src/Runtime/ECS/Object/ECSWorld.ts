@@ -68,6 +68,10 @@ export class ECSWorld implements IECSWorld {
             return this.entities.CreateObject(Reflect.construct(entityC, []))
     }
 
+    GetEntity<T extends IEntity>(entity: number): T {
+        return this.entities.GetObject(entity) as T
+    }
+    
     RemoveEntity(entity: number): void {
         let entityObject = this.entities.GetObject(entity) as ECSEntity
         if (!entityObject) return
