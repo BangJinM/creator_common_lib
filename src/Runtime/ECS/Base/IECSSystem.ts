@@ -8,12 +8,14 @@ export interface IECSSystem {
     /**
      * 当实体进入时触发。
      * @param entity 进入的实体的唯一标识符。
+     * @remarks 子类在实现此方法时，必须调用父类的 `OnEntityEnter` 方法，以确保父类的逻辑也能得到执行。。
      */
     OnEntityEnter(entity: number): void;
 
     /**
      * 当实体离开时触发。
      * @param entity 离开的实体的唯一标识符。
+      * @remarks 子类在实现此方法时，必须调用父类的 `OnEntityExit` 方法，以确保父类的逻辑也能得到执行。。
      */
     OnEntityExit(entity: number): void;
 
