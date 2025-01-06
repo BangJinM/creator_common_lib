@@ -56,14 +56,14 @@ export interface IECSWorld {
      * @param entity 要添加组件的实体的唯一标识符。
      * @param component 要添加的组件实例，实现IComponent接口。
      */
-    AddComponent<T extends IComponent>(entity: number, compC: new () => T): T
+    AddComponent<T extends IComponent>(entity: number, compC: new (args: any[]) => T, args?: any[]): T
 
     /**
      * 从指定实体上移除一个组件。
      * @param entity 要移除组件的实体的唯一标识符。
      * @param componentType 要移除的组件类型。
      */
-    RemoveComponent<T extends IComponent>(entity: number, compC: new () => T): void
+    RemoveComponent<T extends IComponent>(entity: number, compC: new (args: any[]) => T): void
     /**
      * 从指定实体上移除一个组件。
      * @param entity 要移除组件的实体的唯一标识符。
@@ -76,14 +76,14 @@ export interface IECSWorld {
      * @param componentType 要获取的组件类型。
      * @returns 返回对应类型的组件实例，如果没有找到则返回undefined。
      */
-    GetComponent<T extends IComponent>(entity: number, compC: new () => T): T
+    GetComponent<T extends IComponent>(entity: number, compC: new (args: any[]) => T): T
     /**
      * 获取指定实体上的组件。
      * @param entity 要获取组件的实体的唯一标识符。
      * @param componentType 要获取的组件类型。
      * @returns 返回对应类型的组件实例，如果没有找到则返回undefined。
      */
-    GetComponentKey<T extends IComponent>(entity: number, compC: new () => T): number
+    GetComponentKey<T extends IComponent>(entity: number, compC: new (args: any[]) => T): number
 
     Update(deltaTime: number): void
 }

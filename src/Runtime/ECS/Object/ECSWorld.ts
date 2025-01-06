@@ -71,7 +71,7 @@ export class ECSWorld implements IECSWorld {
     GetEntity<T extends IEntity>(entity: number): T {
         return this.entities.GetObject(entity) as T
     }
-    
+
     RemoveEntity(entity: number): void {
         let entityObject = this.entities.GetObject(entity) as ECSEntity
         if (!entityObject) return
@@ -88,7 +88,7 @@ export class ECSWorld implements IECSWorld {
         return this.entities.RemoveObject(entity)
     }
 
-    AddComponent<T extends IComponent>(entity: number, compC: new () => T): T {
+    AddComponent<T extends IComponent>(entity: number, compC: new (args: any[]) => T, args?: any[]): T {
         let entityObject = this.entities.GetObject(entity)
         if (!entityObject) return
 
@@ -98,7 +98,7 @@ export class ECSWorld implements IECSWorld {
         let compId = this.GetComponentKey(entity, compC)
         if (compId >= 0) return this.components.GetObject(compId) as T
 
-        let comp = Reflect.construct(compC, [])
+        let comp = Reflect.construct(compC, args ? [args] : [])
         compId = this.components.CreateObject(comp)
 
         entityObject.AddComponent(compId)
@@ -107,7 +107,7 @@ export class ECSWorld implements IECSWorld {
         return comp
     }
 
-    RemoveComponent<T extends IComponent>(entity: number, compC: new () => T): void {
+    RemoveComponent<T extends IComponent>(entity: number, compC: new (args: any[]) => T): void {
         this.RemoveComponentKey(entity, this.GetComponentKey(entity, compC))
     }
 
@@ -125,13 +125,13 @@ export class ECSWorld implements IECSWorld {
         this.components.RemoveObject(compId)
         system.OnEntityExit(entity)
     }
-    GetComponent<T extends IComponent>(entity: number, compC: new () => T): T {
+    GetComponent<T extends IComponent>(entity: number, compC: new (args: any[]) => T): T {
         let key = this.GetComponentKey(entity, compC)
         if (key >= 0) return this.components.GetObject(key) as T
         return null
     }
 
-    GetComponentKey<T extends IComponent>(entity: number, compC: new () => T): number {
+    GetComponentKey<T extends IComponent>(entity: number, compC: new (args: any[]) => T): number {
         let entityObject = this.entities.GetObject(entity)
         if (!entityObject) return -1
 
