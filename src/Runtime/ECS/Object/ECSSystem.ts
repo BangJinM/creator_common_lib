@@ -6,6 +6,10 @@ export class ECSSystem implements IECSSystem {
     entities: Set<number> = new Set<number>()
     ecsWorld: ECSWorld = null
 
+    constructor(ecsWorld: ECSWorld) {
+        this.ecsWorld = ecsWorld
+    }
+
     GetEntities() {
         return this.entities
     }

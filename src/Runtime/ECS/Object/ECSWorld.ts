@@ -15,18 +15,18 @@ export class ECSWorld implements IECSWorld {
     components: SingleObject<IComponent> = new SingleObject()
 
 
-    AddSystem<T extends IECSSystem>(systemC: new () => T, args: any[] = []): T {
+    AddSystem<T extends IECSSystem>(systemC: new (...args: any[]) => T, ...args: any[]): T {
         let sysId = this.GetSystemKey(systemC)
         if (sysId >= 0) return this.systems.GetObject(sysId) as T
 
+        args.unshift(this)
         let system = Reflect.construct(systemC, args)
         sysId = this.systems.CreateObject(system)
-        system.ecsWorld = this
         system.OnEnter()
         return system
     }
 
-    RemoveSystem<T extends IECSSystem>(systemC: new () => T): void {
+    RemoveSystem<T extends IECSSystem>(systemC: new (...args: any[]) => T): void {
         let sysId = this.GetSystemKey(systemC)
         if (sysId < 0) return
 
@@ -46,13 +46,13 @@ export class ECSWorld implements IECSWorld {
         system.OnExit()
     }
 
-    GetSystem<T extends IECSSystem>(systemC: new () => T): T {
+    GetSystem<T extends IECSSystem>(systemC: new (...args: any[]) => T): T {
         let sysId = this.GetSystemKey(systemC)
         if (sysId >= 0) return this.systems.GetObject(sysId) as T
         return null
     }
 
-    GetSystemKey<T extends IECSSystem>(systemC: new () => T): number {
+    GetSystemKey<T extends IECSSystem>(systemC: new (...args: any[]) => T): number {
         let map = this.systems.GetObjects()
         for (const sysId of map.keys()) {
             if (this.systems.GetObject(sysId) instanceof systemC)
@@ -61,11 +61,9 @@ export class ECSWorld implements IECSWorld {
         return -1
     }
 
-    CreateEntity<T extends IEntity>(entityC: new () => T = null): number {
-        if (!entityC)
-            return this.entities.CreateObject(new ECSEntity())
-        else
-            return this.entities.CreateObject(Reflect.construct(entityC, []))
+    CreateEntity<T extends IEntity>(entityC: new (...args: any[]) => T = null, ...args: any[]): number {
+        if (!entityC) return this.entities.CreateObject(new ECSEntity())
+        return this.entities.CreateObject(Reflect.construct(entityC, args))
     }
 
     GetEntity<T extends IEntity>(entity: number): T {

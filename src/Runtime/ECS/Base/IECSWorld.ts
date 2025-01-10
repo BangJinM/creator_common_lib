@@ -11,33 +11,33 @@ export interface IECSWorld {
      * 向世界中添加一个系统。
      * @param system 要添加的系统，实现IECSSystem接口。
      */
-    AddSystem<T extends IECSSystem>(systemC: new () => T, args: any[]): T
+    AddSystem<T extends IECSSystem>(systemC: new (...args: any[]) => T, ...args: any[]): T
 
     /**
      * 从世界中删除一个系统。
      * @param system 要删除的系统，实现IECSSystem接口。
      */
-    RemoveSystem<T extends IECSSystem>(systemC: new () => T): void
+    RemoveSystem<T extends IECSSystem>(systemC: new (...args: any[]) => T): void
 
     /**
      * 根据类型获取系统实例。
      * @param systemC 要获取的系统类型，需要继承自IECSSystem。
      * @returns 返回指定类型的系统实例。
      */
-    GetSystem<T extends IECSSystem>(systemC: new () => T): T
+    GetSystem<T extends IECSSystem>(systemC: new (...args: any[]) => T): T
 
     /**
      * 根据类型获取系统实例。
      * @param systemC 要获取的系统类型，需要继承自IECSSystem。
      * @returns 返回指定类型的系统实例。
      */
-    GetSystemKey<T extends IECSSystem>(systemC: new () => T): number
+    GetSystemKey<T extends IECSSystem>(systemC: new (...args: any[]) => T): number
 
     /**
      * 在世界中创建一个新的实体。
      * @returns 新创建的实体的唯一标识符。
      */
-    CreateEntity<T extends IEntity>(entityC: new () => T): number
+    CreateEntity<T extends IEntity>(entityC: new (...args: any[]) => T, ...args: any[]): number
 
     /**
      * 在世界中获取实体。
