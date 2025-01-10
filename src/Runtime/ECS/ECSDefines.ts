@@ -4,7 +4,7 @@ let compent_system_map: Map<string, new () => IECSSystem> = new Map();
 /**
  * 标记组件对应的系统
  */
-export function ecs_component(systemType: new () => IECSSystem) {
+export function ecs_component(systemType: new (...args: any[]) => IECSSystem) {
     return function (target: any) {
         compent_system_map.set(target.name, systemType);
     }
