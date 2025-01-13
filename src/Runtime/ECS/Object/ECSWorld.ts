@@ -19,9 +19,12 @@ export class ECSWorld implements IECSWorld {
         let sysId = this.GetSystemKey(systemC)
         if (sysId >= 0) return this.systems.GetObject(sysId) as T
 
+        sysId = this.systems.GetObjectIndex()
         args.unshift(this)
+        args.unshift(sysId)
+
         let system = Reflect.construct(systemC, args)
-        sysId = this.systems.CreateObject(system)
+        this.systems.SetObject(sysId, system)
         system.OnEnter()
         return system
     }
@@ -62,8 +65,10 @@ export class ECSWorld implements IECSWorld {
     }
 
     CreateEntity<T extends IEntity>(entityC: new (...args: any[]) => T = null, ...args: any[]): number {
-        if (!entityC) return this.entities.CreateObject(new ECSEntity())
-        return this.entities.CreateObject(Reflect.construct(entityC, args))
+        let entityId = this.entities.GetObjectIndex()
+        args.unshift(entityId)
+        this.entities.SetObject(entityId, Reflect.construct(entityC, args))
+        return entityId
     }
 
     GetEntity<T extends IEntity>(entity: number): T {
@@ -96,8 +101,10 @@ export class ECSWorld implements IECSWorld {
         let compId = this.GetComponentKey(entity, compC)
         if (compId >= 0) return this.components.GetObject(compId) as T
 
+        compId = this.components.GetObjectIndex()
+        args.unshift(compId)
         let comp = Reflect.construct(compC, args)
-        compId = this.components.CreateObject(comp)
+        this.components.SetObject(compId, comp)
 
         entityObject.AddComponent(compId)
         system.OnEntityEnter(entity)

@@ -2,11 +2,13 @@ import { IECSSystem } from "../Base/IECSSystem";
 import { ECSWorld } from "./ECSWorld";
 
 export class ECSSystem implements IECSSystem {
+    /** 唯一ID */
+    id: number = 0;
     /** 本系统中的实体 */
     entities: Set<number> = new Set<number>()
     ecsWorld: ECSWorld = null
 
-    constructor(ecsWorld: ECSWorld) {
+    constructor(id: number, ecsWorld: ECSWorld) {
         this.ecsWorld = ecsWorld
     }
 

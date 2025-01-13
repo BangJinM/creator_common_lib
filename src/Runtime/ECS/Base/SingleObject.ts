@@ -15,15 +15,18 @@ export class SingleObject<T> {
         this.deleteObjects.push(key);
     }
 
-    CreateObject(object: T) {
+    SetObject(key: number, object: T) {
+        if (this.objects.has(key)) return;
+        this.objects.set(key, object);
+    }
+
+    GetObjectIndex() {
         let index = -1;
         if (this.deleteObjects.length > 0) {
             index = this.deleteObjects.pop();
         } else {
             index = this.objects.size;
         }
-
-        this.objects.set(index, object);
         return index;
     }
 
